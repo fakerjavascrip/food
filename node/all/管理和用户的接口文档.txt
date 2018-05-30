@@ -1,0 +1,5 @@
+【】 change_phone修改电话绑定，用户确认手机修改，管理直接修改;
+【】 cipher修改密码
+【】 find_customer二级管理查看客户的信息
+【】 find_personal查看个人信息	
+【】 find_all一级管理可以查看所有的用户;
