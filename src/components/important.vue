@@ -1,4 +1,5 @@
 <template>
+	<router-link tag="p" to="/"></router-link>
 	<div>
 		<div class="middle_index">
 			<router-view/>

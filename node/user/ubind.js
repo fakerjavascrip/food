@@ -25,6 +25,7 @@ var vcipher = function(phone,nphone,callback){
 				}
 			}
 			else{
+				var t = Math.random()
 				req.session.user = "user="+phone+"&grade=1&juck="+t;
 				result ={
 					err:false,

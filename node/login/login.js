@@ -42,7 +42,7 @@ login = function(req,phone,password,grade,callback){
 								err: false,
 								result: "成员下发session"
 							}
-							var t = Math.random()
+							var t = Math.random();
 							req.session.user = "user="+phone+"&grade=1&juck="+t;
 						}
 						else{
