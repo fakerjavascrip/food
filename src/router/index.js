@@ -19,7 +19,7 @@ export default new Router({
     	name:'recomd',
     	component:recomd
     },
-        {
+    {
     	path:'/message',
     	name:'message',
     	component:message

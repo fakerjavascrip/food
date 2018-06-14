@@ -3,7 +3,8 @@
     <important></important>
   </div>
 </template>
-
+<script src="/path/to/vue.js"></script>
+<script src="/path/to/vuex.js"></script>
 <script>
 import important from './components/important'
 export default {
