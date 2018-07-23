@@ -30,12 +30,13 @@ var register = function(phone,password,name,vcode,callback){
 					else{
 						vcode_node = result[0].vcode;
 						if(vcode==vcode_node){
-							connection.query("INSERT INTO register(phone,password,name,prove,grade)VALUES(?,?,?,?,?)",[phone,password,name,0,1],function(err,result){
+							connection.query("INSERT INTO register(phone,password,name,grade)VALUES (?,?,?,?)",[phone,password,name,0],function(err,result){
 								if(err){
 									result= {
 										err:true,
 										result:"上传数据失败"
 									}
+									console.log(err);
 								}
 								else{
 									result = {

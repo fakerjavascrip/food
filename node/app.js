@@ -6,6 +6,7 @@ var multer = require('multer');
 var upload = multer({dest:'uploads/'})
 let cookieParser = require('cookie-parser');
 let session = require('cookie-session');
+app.use(cookieParser());
 let router = express.Router();
 let bodyParser = require('body-parser');
 let user = require('./user');
@@ -19,7 +20,7 @@ app.use(session({
 }))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("*",function(req,res,next){
-	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Origin",  req.header("origin"));
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
     res.header("Access-Control-Allow-Credentials", true);

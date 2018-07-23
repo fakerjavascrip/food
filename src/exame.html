@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+        var json1={"name":"鹏哥","age":18,"arr1":[1,2,3,4,5],"string":'afasfsafa',"arr2":[1,2,3,4,5],"arr3":[{"name1":"李鹏"},{"job":"前端开发"}]};
+		function deep(c) {
+		　　　　for (var i in c) {
+		　　　　　　if (typeof c[i] === 'object') {
+		　　　　　　　　deep(c[i]);
+		　　　　　　} else {
+		　　　　　　　　　console.log(c[i]);
+		　　　　　　}
+		　　　　}
+		　　}
+		deep(json1);
+	</script>
+</body>
+</html>

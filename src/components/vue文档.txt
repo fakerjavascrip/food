@@ -1,0 +1,13 @@
+begain:初始进入页面，选择登录或者注册的接口;初始主路由
+login:登录的子路由;主路由下
+register:注册的子路由;主路由下
+hotfind热门搜索的路由;lookup
+lookup:搜索时上面的那个输入input框的路由；lookup
+major:跳转商品，订单，个人信息的路由;
+message:查询个人订单信息的主路由;
+notfind:当lookup没有find时候出现的情况;lookup/notfind
+onlyfind:当查找的时候出现的子路由;lookup/onlyfind
+person:当查找个人信息的主路由;
+recond:刚点击商品信息的主路由；
+show:展示所有蔬菜种类的路由;
+timelyfind:展示即时路由;lookup/timefind

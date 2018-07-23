@@ -1,15 +1,15 @@
 var express = require('express');
 var request = require('request');
 var mysql = require('mysql');
-var find_goods_all = function(name,callback){
+var find_goods_all = function(callback){
 	var result;
-	pool = {
+	pool = mysql.createPool({
 		host: 'localhost',
 		port: 3306,
 		database: "food",
 		user: "root",
 		password: "15596009908"
-	}
+	})
 	pool.getConnection(function(err,connection){
 		if(err){
 			result= {
@@ -19,7 +19,7 @@ var find_goods_all = function(name,callback){
 			callback(result);
 		}
 		else{
-			query.connection("select * from goods",[],function(err,result){
+			connection.query("select * from goods",function(err,result){
 				if(err){
 					result ={
 						err:true,

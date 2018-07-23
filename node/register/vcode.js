@@ -45,10 +45,6 @@ var code = function(phone,callback){
                                         err:true,
                                         result:"数据的清理出现了问题"
                                     }
-                                    if(result.err==false){
-                                        console.log("发送短信");
-                                            //后端传验证码给手机
-                                    }
                                     callback(result);
                                 }
                                 else{
@@ -64,6 +60,7 @@ var code = function(phone,callback){
                                             err:false,
                                             result:"获取验证码成功"
                                         }
+                                        console.log(vcode);
                                     }
                                     if(result.err==false){
                                         console.log("发送短信");

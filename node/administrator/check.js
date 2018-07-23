@@ -39,7 +39,7 @@ var agree = function(phone,agree,callback){
 			}
 			else if(agree==1)
 			{
-				connection.query('update register set prove =1 where phone = ?',[phone],function(err,result){
+				connection.query('update register set grade =1 where phone = ?',[phone],function(err,result){
 					if(err){
 						result = {
 							err:true,

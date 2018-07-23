@@ -1,3 +1,4 @@
+//grade=0待通过注册,grade=1普通用户,grade=2二级管理,grade=1一级管理;
 var express = require('express');
 var router = express.Router();
 var app= express();
@@ -7,18 +8,24 @@ var querystring= require('querystring');
 var Register = require('./register/register.js');
 var Vcode = require('./register/vcode.js');
 var Login = require('./login/login.js');
-var Check = require('./administrator/check.js');
-var Rank = require('./administrator/rank.js');
 var Find_personal = require('./all/find_personal.js');
 var Bind = require('./all/bind.js');
+//按商品的名字查找商品
+var Find_goods_name = require('./all/find_goods_name.js');
 var Vcipher = require('./user/vcipher');
+//给热度商品加1热度
+var Ahotgood = require('./user/ahotgood.js');
+//查找热度商品
+var Fhotgood  =require('./user/Fhotgood.js');
+//增加商品
+var Check = require('./administrator/check.js');
+var Rank = require('./administrator/rank.js');
 var Add_goods = require('./administrator/add_goods.js')
-var Change_goods_num = require('./administrator/Change_goods_num.js');
-var Change_goods_name = require('./administrator/Change_goods_name.js');
-var Change_goods_photo  = require('./administrator/Change_goods_photo.js');
-var Find_goods_all = require('./administrator/Find_goods_all.js');
-var Find_goods_name = require('./administrator/Find_goods_name.js');
-var Find_goods_num = require('./administrator/Find_goods_num.js');
+var Change_goods_num = require('./administrator/change_goods_num.js');
+var Change_goods_name = require('./administrator/change_goods_name.js');
+var Change_goods_photo  = require('./administrator/change_goods_photo.js');
+var Find_goods_all = require('./administrator/find_goods_all.js');
+var Find_goods_num = require('./administrator/find_goods_num.js');
 var Find_person_goods = require('./administrator/find_person_goods.js');
 var User_add_goods = require('./user/user_add_goods.js');
 var User_change_goods = require('./user/user_change_goods.js');
@@ -74,7 +81,7 @@ function isVcode(text){
 //验证mark的正则
 function isMark(text){
 	//浮点数的正则
-	var myreg=/(^-?|^\+?|^\d?)\d*\.\d+$/;
+	var myreg=/^(\-|\+)?\d+(\.\d+)?$/;
     if (!myreg.test(text)) {  
         return false;  
     } 
@@ -128,13 +135,7 @@ function isGoods(text){
 }
 //验证session中间件
 function Session(req,res,next){
-	if(req.body.session){
-		session = req.body.session;
-	}
-	else if(req.query.session){
-		session = req.query.session;
-	}
-	if(req.session.user==session){
+	if(req.cookies.session_from_lb){
 		next();
 	}
 	else{
@@ -194,8 +195,7 @@ function customer(req,res,next){
 		}
 }
 router.use('/vcode',function(req,res){
-	var a=4;
-	var vcode,phone;
+	var phone;
 	if(req.body.phone){
 		phone = req.body.phone;
 	}
@@ -216,6 +216,7 @@ router.use('/vcode',function(req,res){
 	}
 })
 //注册上传的接口
+//grade的等级为0就是连普通用户也不算
 router.use('/register',function(req,res){
 	var phone,password,name,vcode;
 	if(req.body.phone){
@@ -249,15 +250,13 @@ router.use('/login',function(req,res){
     if(req.body.phone){
 		phone = req.body.phone;
 		password = req.body.password; 
-		grade = req.body.grade;
 	}
 	else if(req.query.phone){
 		phone = req.query.phone;
 		password = req.query.password;
-		grade = req.query.grade;
 	}
-	if(isPhone(phone)&&isPassword(password)&&isGrade(grade)){
-		Login(req,phone,password,grade,function(result){
+	if(isPhone(phone)&&isPassword(password)){
+		Login(req,phone,password,function(result){
 			returnJson(req,res,result);
 		})
 	}
@@ -582,21 +581,20 @@ router.use('/findall',Session,function(res,res){
 		returnJson(req,res,result);
 	}
 })
-//管理员上传文件信息
-router.use('/add_goods', upload.single('file'),Session,owner,function(req,res){
-	var name,num;
+//管理员上传物品文件信息 
+router.use('/addgoods', upload.single('file'),Session,administrator,function(req,res){
+	var name,unit;
 	var file = req.file;
-	var filename = "./img/"+file.filename+".png"
+	var filename = "../static/"+file.filename+".png"
+	// var filedownload = "static/"+file.filename+".png"
     if(req.body.name){
   		name = req.body.name;
-  		num =req.body.num;
     } 
     else if(req.query.name){
   		name = req.query.name;
-  	    num = req.query.num;
   	}
-	if(isGoods(name)&&isGrade(num)){
-		Add_goods(filename,file,name,num,function(result){
+	if(isGoods(name)){
+		Add_goods(filename,file,name,function(result){
 	  	returnJson(req,res,result);	
 	  	});
 	}
@@ -605,7 +603,7 @@ router.use('/add_goods', upload.single('file'),Session,owner,function(req,res){
 			err:true,
 			result:"正则不匹配"
 		}
-		returnJson(result);
+		returnJson(req,res,result);
 	}
 })
 //修改物品数量
@@ -709,31 +707,10 @@ router.use('/fgname',Session,function(req,res){
 })
 //查询全部商品和为零的商品
 router.use('/fgall',Session,function(req,res){
-	var number;
-	if(req.body.number){
-		number = req.body.number;
-	}
-	else if(req.query.number){
-		number = req.query.number;
-	}
 	//查找全部商品
-	if(number==1){
 		Find_goods_all(function(result){
 			returnJson(req,res,result);
 		})
-	}
-	//查找数量为零的商品
-	else if(number==2){
-		Find_goods_num(function(result){
-			returnJson(req,res,result);
-		})
-	}
-	else{
-		result = {
-			err:true,
-			result:"number的参数值不正确"
-		}
-	}
 })
 //删除商品
 router.use('/dgoods',Session,owner,function(req,res){
@@ -758,31 +735,32 @@ router.use('/dgoods',Session,owner,function(req,res){
 	}
 })
 //用户添加商品
-router.use('/customer',Session,function(req,res){
+router.use('/customers',Session,function(req,res){
 	//添加当天的商品信息
+	//person从session中获取
 	var str,arr,name,num,person,date,unit;
 	str = req.session.user;
 	arr = querystring.parse(str,"&","=");
 	if(req.body.name){
 		name = req.body.name;
 		num = req.body.num;
-		person = req.body.person;
 		unit = req.body.unit;
-		time = req.body.time; 
+		time = req.body.time;
+		person = arr.user;
 	}
 	else if(req.query.name){
 		name = req.query.name;
 		num = req.query.num;
-		person = req.query.person;
-		person = req.query.unit;
+		unit = req.query.unit;
 		time = req.query.time;
+		person = arr.user;
 	}
-	if(isGoods(name)&&isGrade(num)&&isphone(person)&&isGoods(unit)&&isGoods(time)){
+	if(isGoods(name)&&isMark(parseFloat(num))&&isGoods(unit)&&isGoods(time)){
 		var date = new Date();
 		var time1 = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
 		//正则判断
-		if(time ==time1&&arr[0]==persom){
-			User_add_goods(name,num,unit,person,function(result){
+		if(time ==time1){
+			User_add_goods(name,parseFloat(num),unit,person,time,function(result){
 				returnJson(req,res,result);
 			});
 		}
@@ -1141,5 +1119,26 @@ router.use('/findwords',Session,function(req,res){
 		}
 		returnJson(req,res,result);
 	}
+})
+//添加热门商品
+router.use('/ahotgood',Session,function(req,res){
+		var name;
+		if(req.body.name){
+			name = req.body.name;
+		}
+		else if(req.query.name){
+			name = req.query.name;
+		}
+		//给热门的商品热度加1
+		Ahotgood(name,function(result){
+			returnJson(req,res,result);
+		})
+})
+//查询热门商品
+router.use('/fhotgood',Session,function(req,res){
+	//查找商品
+	Fhotgood(function(result){
+		returnJson(req,res,result);
+	})
 })
 module.exports = router;

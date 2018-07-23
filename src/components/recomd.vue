@@ -2,22 +2,27 @@
 	<div>
 		<div class="top">
 			<div class="top_find">
-				<input class="top_find_text" type="text" placeholder="点击查找商品" name="">
-				<div class="top_find_button">查找</div>
+				<input @click = "lookup" type="button" value="搜索需要的商品名称" name="">
 			</div>
 		</div>
 		<div class="middle">
 			<show></show>
-		</div>
+		</div> 
 	</div>
 </template>
-<script type="text/javascript">
+<script type="text/javascript"> 
 import show from './show'
 	export default{
 		components:{ show },
 		name:'recomd',
 		data(){
 			return{}
+		},
+		methods:{
+			//点击后跳转查询的路由
+			lookup:function(){
+				this.$router.push('/lookup');
+			},
 		}
 	}
 </script>
@@ -26,35 +31,39 @@ import show from './show'
 		width: 100%;
 		height: auto;
 		background-color: white;
-		padding-top: 65px;
+		padding-top: 60px;
 	}
 	.top{
 		position: fixed;
 		margin: auto;
-		width: 100vw;
-		background-color: #46a3ff;
-		height: 65px;
+		width: 100%;
+		background-color: #0af;
+		/*#46a3ff*/
+		height: 60px;
 		z-index:10;
 	}
 	.top_find{
 		position: relative;
 		margin: auto;
-		width: 94.5%;
+		width: 92%;
 		height: 40px;
-		top: 15px;
+		top: 10px;
 		text-align: center;
 	}
-	.top_find_text{
-		text-indent: 30px;
+	.top_find input{
 		position: relative;
-		width: 80%;
+		width: 100%;
 		height: 40px;
 		line-height: 40px;
-		font-size: 22px;
-		color: gray;
+		font-size: 16px;
 		border-width: 0px;
 		float: left;
-    	color: rgba(0,0,0,.3);
+    	color: #999;
+    	text-align: center;
+    	background-color: white;
+    	font-family: simsun;
+    	outline: none;
+
 	}
 	.top_find_button{
 		position: relative;

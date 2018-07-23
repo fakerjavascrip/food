@@ -1,0 +1,7 @@
+1. goods 货物的信息
+2. initiator  留言发起人
+3. register 注册信息,和已经注册成功的信息
+4. respondent 回复留言
+5. session 存放session的信息
+6.user 用户买了什么商品，存储
+7.vcode 存放个人的验证码的信息
