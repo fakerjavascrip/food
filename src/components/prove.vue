@@ -2,7 +2,7 @@
 	<div class="prove_box">
 		<div class="prove_top">
 			<div class="prove_top_title"><b>确认订单</b></div>
-			<div class="prove_top_mark"><img src="../assets/backwhite.png"></div>
+			<div class="prove_top_mark"  @click="backpay"><img src="../assets/backwhite.png"></div>
 		</div>
 		<div class="prove_who">
 			<div>梁博</div>
@@ -11,7 +11,7 @@
 		<div class="prove_center">
 			<div class="prove_center_date">
 				<div class="prove_date_mark">下单时间</div>
-				<div class="prove_date_time">当天时间(2017-7-21)</div>
+				<div class="prove_date_time">当天时间(2017-7-24)</div>
 			</div>
 			<div class="prove_center_kind">
 				<div class="prove_kind_mark">下单方式</div>
@@ -19,46 +19,114 @@
 			</div>
 		</div>
 		<div class="prove_bottom">
-			<div class="prove_goods">
-				<div class="prove_goods_name">鸡蛋</div>
-				<div class="prove_goods_num">123</div>
-				<div class="prove_goods_unit">斤</div>
+			<div class="prove_title"><p>精品在线蔬菜店</p></div>
+			<div class="prove_goods" v-for="(item,index) in items" :key="index">
+				<div class="prove_goods_img">
+					<img v-bind:src="item.filename">
+				</div>
+				<div class="prove_goods_title">
+					<div class="prove_goods_num">{{item.number}}</div>
+					<div class="prove_goods_name">{{item.name}}</div>
+					<div class="prove_goods_unit">{{item.select}}</div>
+				</div>
 			</div>
 		</div>
+		<div class="prove_bottom_mark">
+			<div class="prove_mark_prove">
+				<div class="prove_mark_mark">预计配寄时间</div>
+				<div class="prove_mark_message">2017-7-25</div>
+			</div> 
+			<div class="prove_mark_prove">
+				<div class="prove_mark_mark">发票信息</div>
+				<div class="prove_mark_message">线下发票</div>
+			</div>
+			<div class="prove_mark_prove">
+				<div v-show="judge" class="prove_mark_mark">订单备注</div>
+				<div v-show="judge" class="prove_mark_message" @click = "special">请选择<b style="font-size:20px; ">></b></div>
+				<div v-show="!judge" class="prove_message">{{message}}</div>
+				<div v-show="!judge" class="prove_message_mark" @click = "special">></div>
+			</div>
+		</div>
+
+		<gopay></gopay>
 	</div>
 </template>
 <script type="text/javascript">
+	import { mapState} from 'vuex'
+    import gopay from './gopay.vue'
 	export default{
 		data(){
-			return{}
-		}
+			return{
+				items:this.$store.getters.vegetables,
+				judge:true
+			}
+		},
+		methods:{
+			special:function(){
+				this.$router.push('/determine')
+			},
+			backpay:function(){
+				this.$store.commit('addplus');
+				this.$router.push('/major');
+			},
+			judgemessage:function(){
+				if(this.message!=""){
+					this.judge=false;
+				}
+			}
+		},
+	    computed:{
+	        ...mapState([
+	        'confirmshow',
+	        'gopayshow',
+	        'message'
+	        ]),
+	    }, 
+	    components:{gopay},
+	    mounted:function(){
+	    	this.judgemessage();
+	    }
 	}
 </script>
 <style type="text/css">
+	*{
+		margin: 0px;
+		padding: 0px;
+		border-width: 0px;
+	}
 	.prove_box{
 		position: relative;
 		width: 100%;
 		height: auto;
 /*		从左到右的过度*/
 		background-image: linear-gradient(90deg,#0af,#0085ff);
+		padding-bottom: 18vw;
+		overflow: hidden;
 	}
 	.prove_top{
-		position: relative;
+		position: fixed;
 		width: 100%;
-		height: auto;
+		height: 16vw;
+		top: 0;
 		overflow: hidden;
-		padding-bottom: 10vw;
+/*		padding-bottom: 4vw;*/
+		background-image: linear-gradient(90deg,#0af,#0085ff);
+		z-index: 1;
 	}
 	.prove_who{
 		position: relative;
 		width: 100%;
 		height: auto;
 		overflow: hidden;
+		padding-top: 22vw;
+		background-image: linear-gradient(90deg,#0af,#0085ff);
 	}
 	.prove_top_mark{
+		position: relative;
 		width: 8vw;
 		height: 10vw;
-		padding: 1vw 0 1vw 3vw;
+		padding: 3vw 0 3vw 3vw;
+		z-index: 5;
 	}
 	.prove_top_mark img{
 		margin-top: 2.5vw;
@@ -69,13 +137,15 @@
 		position: absolute;
 		width:100%;
 		height: 100%;
-		line-height: 12vw;
+		line-height: 16vw;
 		text-align: center;
 		color: white;
+		z-index: 3;
 		font-size: 20px;
 	}
 	.prove_who div{
 		width: auto;
+		height: 6vw;
 		position: relative;
 		float: left;
 		color: white;
@@ -89,6 +159,7 @@
 		background-color: white;
 		margin: auto;
 		overflow: hidden;
+		margin-bottom: 6vw;
 	}
 	.prove_center_date{
 		position: relative;
@@ -141,37 +212,135 @@
 	}	
 	.prove_bottom{
 		position: relative;
-		width: 98%;
+		width: 96%;
 		height: auto;
 		background-color: white;
+		padding-bottom: 3vw;
 		overflow: hidden;
 		margin: auto;
 		margin-top: 2vw;
+		margin-bottom: 6vw;
 	}
 	.prove_goods{
 		position: relative;
-		float: left;
 		width: 100%;
 		height: auto;
 		overflow: hidden;
+		padding: 3vw 0 3vw 0;
+		display:flex;
+		border-style: solid;
+		border-width: 0.02px 0 0 0.02px;
+		border-color: #e6e6e6;
+	}
+	.prove_title{
+		position: relative;
+		width: 100%;
 		padding: 5vw 0 5vw 0;
+		font-weight: 700;
+		font-size: 18px;
+		text-indent: 5vw;
+	}
+	.prove_goods_img{
+		flex: 0 0 auto;
+		position: relative;
+		width: 13vw;
+		height: 13vw;
+		float: left;
+		padding-left: 5vw;
+	}
+	.prove_goods_img img{
+		width: 100%;
+		height: 100%;
+	}
+	.prove_goods_title{
+		position: relative;
+		flex: 1 1 auto;
+		padding: 0 10vw 0 14vw;
+		overflow: hidden;
 	}
 	.prove_goods_name{
 		position: relative;
-		width: auto;
-		height: auto;
+		width: 20vw;
+		height: 12vw;
+		margin-left: -100%;
 		float: left;
+		line-height: 12vw;
+		left: -10vw;
 	}
 	.prove_goods_num{
 		position: relative;
-		width: auto;
-		height: auto;
+		width: 100%;
+		height: 12vw;
 		float: left;
+		line-height: 12vw;
+		text-align: center;
 	}
 	.prove_goods_unit{
 		position: relative;
-		width: auto;
-		height:auto;
+		width: 10vw;
+		height:12vw;
+		margin-left: -10vw;
 		float: left;
+		right: -10vw;
+		line-height: 12vw;
+		color:#ff4a07;
+	}
+	.prove_bottom_mark{
+		position: relative;
+		width: 96%;
+		height: auto;
+		background-color: white;
+		margin: auto;
+		margin-top: 2vw;
+	}
+	.prove_mark_prove{
+		position: relative;
+		width: 100%;
+		height: 6vw;
+		font-size: 16px;
+		padding: 6vw 0 6vw 0;
+		border-style: solid;
+		border-width: 0.02px 0 0 0.02px;
+		border-color: #e6e6e6;
+		color: #333;
+		overflow:hidden;
+	}
+	.prove_mark_mark{
+		position: relative;
+		width: 40vw;
+		height: 100%;
+		float: left;
+		line-height: 6vw;
+		font-weight: 500;
+		text-indent: 3vw;
+	}
+	.prove_mark_message{
+		position: relative;
+		width: 100%; 
+		height: 100%;
+		margin-left: 40vw;
+		line-height: 6vw;
+		text-indent: 28vw;
+		color: #bbb;
+	}
+	.prove_message{
+		position: relative;
+		width: 85vw;
+		height: 100%;
+		float: left;
+		line-height: 6vw;
+		font-weight: 500;
+		text-indent: 3vw;
+		overflow: hidden;
+	}
+	.prove_message_mark{
+		position: relative;
+		width: 100%; 
+		height: 100%;
+		margin-left: 85vw;
+		line-height: 6vw;
+		font-weight: 700;
+		font-size: 19px;
+		color: #bbb;
 	}
 </style>

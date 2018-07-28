@@ -54,6 +54,13 @@
 			onlyfind:function(){
 				axios.defaults.withCredentials = true;
 				var self = this;
+				axios.get('http://localhost:1337/user//ahotgood?name='+this.goodname)
+				  .then(function (data) {
+				  	console.log("添加成功");
+				  })
+				  .catch(function (error){
+				    console.log(error);
+				  });
 				axios.get('http://localhost:1337/user/fgname?name='+this.goodname)
 				  .then(function (data) {
 				  	self.items = data.data.result;

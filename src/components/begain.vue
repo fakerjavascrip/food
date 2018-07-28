@@ -37,7 +37,13 @@
 				this.changeable = register;
 				this.active = false;
 				this.isactive =true;
+			},
+			clearall: function(){
+				this.$store.commit('cleargoods');
 			}
+		},
+		mounted:function(){
+			this.clearall();
 		}
 	}
 </script>

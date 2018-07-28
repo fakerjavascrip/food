@@ -3,20 +3,34 @@
 <head>
 	<meta charset="utf-8">
 	<title></title>
+	<style type="text/css">
+		*{
+			padding: 0px;
+			margin: 0px;
+		}
+		.box{
+/*			width: 100%;
+			height: 100px;*/
+/*		    box-sizing: content-box;
+		    font-size: 0; */
+/*			padding: 15px 20px;*/
+			display:flex;
+			align-items: flex-start; 
+			overflow: auto;     
+		}
+		.first{
+			position: relative;
+			flex: 0 0 auto;
+			background-color: blue;
+		}
+		.second{
+			position: relative;
+			flex: 1 1 auto;
+			background-color: green;
+		}
+	</style>
 </head>
 <body>
-	<script type="text/javascript">
-        var json1={"name":"鹏哥","age":18,"arr1":[1,2,3,4,5],"string":'afasfsafa',"arr2":[1,2,3,4,5],"arr3":[{"name1":"李鹏"},{"job":"前端开发"}]};
-		function deep(c) {
-		　　　　for (var i in c) {
-		　　　　　　if (typeof c[i] === 'object') {
-		　　　　　　　　deep(c[i]);
-		　　　　　　} else {
-		　　　　　　　　　console.log(c[i]);
-		　　　　　　}
-		　　　　}
-		　　}
-		deep(json1);
-	</script>
+	<div class="box"><div class="first">左固定</div><div class="second">右自适应</div></div>
 </body>
 </html>

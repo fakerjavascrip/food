@@ -14,7 +14,7 @@
 						<div class="confirm_unit"><span>{{item.select}}</span></div>
 						<div class="confirm_num">
 							<button class="confirm_num_reduce" @click='changenum(item,-1)'><img src="../assets/reduce.png"></button>
-							<input type="text" v-model="item.number" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" class="confirm_num_show">
+							<input type="text" v-model="item.number" @blur="leaves(item)" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" class="confirm_num_show">
 							<button class="confirm_num_add"  @click='changenum(item,1)'><img src="../assets/add.png"></button>
 						</div>
 					</div>
@@ -29,7 +29,7 @@
 	export default{
 		data(){
 			return{
-				itemgood:this.$store.getters.vegetables,
+				itemgood:this.$store.getters.vegetables
 			}
 		},
 		methods:{
@@ -54,6 +54,15 @@
 			},
 			hidden:function(){
 				this.$store.commit('changeconfirm');
+			},
+			leaves:function(item){
+				if(item.number==""){
+					item.number =0;
+				}
+				item.number = parseFloat(item.number);
+				if(item.number==0){
+					this.$store.commit('reduceshopping',item);
+				}
 			}
 		},
 		computed: {

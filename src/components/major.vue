@@ -5,17 +5,19 @@
 		</div>
 <!-- 		主页的四个导航栏 -->
 		<div class="major_mark" v-show="!plus" style="position:fixed;">
+			<div class="major_mark_title">
+				<div class="nocolor" v-bind:class="{colorful:first }">首页</div>
+				<div class="nocolor" v-bind:class="{colorful:second }">订单</div>
+				<div class="nocolor" v-bind:class="{colorful:third }">我的</div>
+			</div>
 	      <router-link tag="div" to="/major">
-	        <div class="mark_child"><img src="../assets/homepage.png"></div>
+	        <div class="mark_child" @click = "cfirst"><img src="../assets/homepage.png"></div>
 	      </router-link>
-	      <router-link tag="div" to="/major/message">
-	        <div class="mark_child"><img src="../assets/order.png"></div>
+	      <router-link tag="div" to="/major/order">
+	        <div class="mark_child" @click = "csecond"><img src="../assets/order.png"></div>
 	      </router-link>
-	      <router-link tag="div"  to="/major/personal">
-	        <div class="mark_child" ><img src="../assets/person.png"></div>
-	      </router-link>
-	      <router-link tag="div"  to="/major/personal">
-	        <div class="mark_child" ><img src="../assets/words.png"></div>
+	      <router-link tag="div"  to="/major/person">
+	        <div class="mark_child" @click ="cthird"><img src="../assets/person.png"></div>
 	      </router-link>
 		</div>
 		<confirm v-show="confirmshow"></confirm>
@@ -32,6 +34,9 @@
 		data(){
 			return{
 				show:false,
+				first:true,
+				second:false,
+				third:false
 			}
 		},
 		components: {
@@ -47,7 +52,39 @@
 		    add(){
 		    	this.$store.commit('increment');
 		    },
-        }, 
+		    cfirst:function(){
+        		this.first=true;
+        		this.second=false;
+        		this.third=false;
+		    },
+		    csecond:function(){
+        		this.first=false;
+        		this.second=true;
+        		this.third=false;
+		    },
+		    cthird:function(){
+        		this.first=false;
+        		this.second=false;
+        		this.third=true;		    	
+		    }
+        },
+        mounted:function(){
+        	if(this.$route.path=='/major'){
+        		this.first=true;
+        		this.second=false;
+        		this.third=false;
+        	}
+        	else if(this.$route.path=='/major/order'){
+        		this.first=false;
+        		this.second=true;
+        		this.third=false;
+        	}
+        	else if(this.$route.path=='/major/person'){
+        		this.first=false;
+        		this.second=false;
+        		this.third=true;
+        	}
+        } 
 	}
 </script>
 <style type="text/css">
@@ -125,8 +162,8 @@
 	}
 	.mark_child{
 		position: relative;
-		width: 25%;
-		height: 12.8vw;
+		width: 33.3333333%;
+		height: 10.4vw;
 		text-align: center;
 		line-height: 6vh;
 		font-size: 20px;
@@ -136,7 +173,27 @@
 	}
 	.mark_child img{
 		width: auto;
-		height: 9vw;
+		height: 6vw;
 		margin-top: 1.4vw;
+	}
+	.major_mark_title{
+		position: absolute;
+		width: 100%;
+		height: 5vw;
+		line-height: 5vw;
+		bottom: 0px;
+		overflow: hidden;
+	}
+	.nocolor{
+		width: 33.3333333%;
+		height: 100%;
+		float: left;
+		text-align: center;
+		font-size: 11px;
+		color: #8e8e93;
+/*		color: #0089dc;*/
+	}
+	.colorful{
+		color: #0089dc;
 	}
 </style>

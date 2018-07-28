@@ -17,6 +17,8 @@ var Vcipher = require('./user/vcipher');
 var Ahotgood = require('./user/ahotgood.js');
 //查找热度商品
 var Fhotgood  =require('./user/Fhotgood.js');
+//上传订单的信息
+var Upload_message = require('./user/message.js');
 //增加商品
 var Check = require('./administrator/check.js');
 var Rank = require('./administrator/rank.js');
@@ -126,12 +128,24 @@ function isGrade(text){
 function isGoods(text){
 	//商品名字不超过15个字
 	var myreg=/[^/]{1,15}$/;
-    if (!myreg.test(text)) {  
+    if (!myreg.test(text)) {
         return false;  
     } 
     else{  
         return true;  
     }  
+}
+//验证时间
+function isTime(text){
+		var date = new Date();
+		var time1 = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+		//正则判断
+		if(text ==time1){
+			return true;
+		} 
+		else{
+			return false;
+		}
 }
 //验证session中间件
 function Session(req,res,next){
@@ -738,39 +752,26 @@ router.use('/dgoods',Session,owner,function(req,res){
 router.use('/customers',Session,function(req,res){
 	//添加当天的商品信息
 	//person从session中获取
-	var str,arr,name,num,person,date,unit;
+	// var str,arr,name,num,person,date,unit;
+	var goods;
 	str = req.session.user;
 	arr = querystring.parse(str,"&","=");
-	if(req.body.name){
-		name = req.body.name;
-		num = req.body.num;
-		unit = req.body.unit;
+	person = arr.user;
+	if(req.body.goods){
+		goods = req.body.goods;
 		time = req.body.time;
-		person = arr.user;
 	}
-	else if(req.query.name){
-		name = req.query.name;
-		num = req.query.num;
-		unit = req.query.unit;
+	else if(req.query.goods){
+		goods = req.query.goods;
 		time = req.query.time;
-		person = arr.user;
 	}
-	if(isGoods(name)&&isMark(parseFloat(num))&&isGoods(unit)&&isGoods(time)){
-		var date = new Date();
-		var time1 = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-		//正则判断
-		if(time ==time1){
-			User_add_goods(name,parseFloat(num),unit,person,time,function(result){
-				returnJson(req,res,result);
-			});
-		}
-		else{
-			result = {
-				err:true,
-				resultL:"信息不匹配"
-			}
-			returnJson(req,res,result)
-		}
+	//将字符串解析为数组对象
+	vegetables = JSON.parse(goods);
+	//正则判断
+	if(isTime(time)){
+		User_add_goods(vegetables,time,person,function(result){
+			returnJson(req,res,result);
+		});
 	}
 	else{
 		result= {
@@ -1141,4 +1142,34 @@ router.use('/fhotgood',Session,function(req,res){
 		returnJson(req,res,result);
 	})
 })
+//上传订单备注
+//uploadmessage
+router.use('/umessage',Session,function(req,res){
+	var name,message,date;
+	var arr,str;
+	str = req.session.user;
+	arr = querystring.parse(str,"&","=");
+	name = arr.user;
+	if(req.body.message){
+		message = req.body.message;
+		date = req.body.date;
+	}
+	else if(req.query.message){
+		message = req.query.message;
+		date = req.query.date;
+	}
+	if(isWords(message)&&isTime(date)){
+		Upload_message(name,message,date,function(result){
+			returnJson(req,res,result);
+		});
+	}
+	else{
+		result ={
+			err:true,
+			result:"正则不匹配"
+		}
+		returnJson(req,res,result);
+	}
+})
+//查看订单备注
 module.exports = router;

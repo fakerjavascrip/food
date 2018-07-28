@@ -33,7 +33,11 @@
 		    	this.$store.commit('changeconfirm');		    
 		    },
 		    prove:function(){
-		    	this.$router.push('/prove');
+		    	if(this.amount>0){
+			    	this.$store.commit('noconfirm');
+			    	this.$store.commit('reduceplus');
+			    	this.$router.push('/prove');
+		    	}
 		    }
         }, 
 	}

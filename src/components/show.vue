@@ -165,19 +165,21 @@
   		width: auto;
   		height: auto;
   		margin-top: 5px;
-  		background-color: #cdcdcd;
+/*  		background-color: #dbdbdb;*/
   		overflow: hidden;
   	}
 	.show_child{
+		position: relative;
 		width: 100%;
 		height: 95px;
-		position: relative;
 		margin: auto;
-		margin-top: 1px;
 		padding-top: 10px;
 		padding-bottom: 15px;
 		list-style: none;
 		background-color: white;
+		border-style: solid;
+		border-color: #dbdbdb;
+		border-width: 0.016px;
 	}
 	.show_child_first{
 		position: relative;
