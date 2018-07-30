@@ -19,7 +19,9 @@
 			//如果没有订单的时候的路由
 			backprove:function(){
 				this.$router.push("/major/order/noorder");
-			}
+			},
+		},
+		mounted:function(){
 		}
 	}
 </script>

@@ -1,28 +1,13 @@
 <template>
 	<div>
 		<div class="order_center">
-			<div class="order_center_good">
+			<div v-for="(item,index) in items" :key="index"  class="order_center_good">
 				<div class="order_time">
-				    <div class="order_time_title">2017-3-18</div>
-					<div class="order_time_state">订单未送达</div>
-				</div>
-				<div class="order_goodname">
-					<div class="order_goodname_title">鸡蛋等10件商品</div>
+				    <div class="order_time_title">{{item.date}}</div>
+					<div class="order_time_state">{{item.mark}}</div>
 				</div>
 				<div class="order_find">
-					<div class="order_find_sublime" @click = "todetailed">查看订单</div>
-				</div>
-			</div>
-			<div class="order_center_good">
-				<div class="order_time">
-				    <div class="order_time_title">2017-3-18</div>
-					<div class="order_time_state">订单已送达</div>
-				</div>
-				<div class="order_goodname">
-					<div class="order_goodname_title">鸡蛋等6件商品</div>
-				</div>
-				<div class="order_find">
-					<div class="order_find_sublime">查看订单</div>
+					<div class="order_find_sublime" @click = "changedate(index)">查看订单</div>
 				</div>
 			</div>
 		</div>
@@ -36,14 +21,49 @@
 	</div>
 </template>
 <script type="text/javascript">
+	import axios from 'axios'
 	export default{
 		data(){
-			return {}
+			return {
+				items:[],
+			}
 		},
 		methods : {
-			todetailed:function(){
+			finddate:function(){
+				//查找日期
+				var self = this;
+		    	var now = new Date();
+				var  time= now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+				axios.defaults.withCredentials = true;
+				axios.get('http://localhost:1337/user/ufdate/')
+				  .then(function (data) {
+				    if(data.data.err==false){
+				    	self.items=data.data.result;
+				    	for(let i=0;i<data.data.result.length;i++){
+				    		if(time==data.data.result[i].date){
+				    			self.$set(self.items[i], 'mark', "订单未送达")
+				    		}
+				    		else{
+				    			self.$set(self.items[i], 'mark', "订单已送达");
+				    		}
+				    	}
+				    }
+				    else{
+				    	console.log("失败");
+				    }
+				  })
+				  .catch(function (error) {
+				    console.log(error);
+				  });
+			},
+			changedate:function(index){
+				this.$store.commit('updatedate',this.items[index].date);
+				
 				this.$router.push('/detailed');
 			}
+		},
+		mounted:function(){
+			this.finddate();
 		}
 	}
 </script>

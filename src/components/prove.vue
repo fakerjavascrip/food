@@ -4,6 +4,9 @@
 			<div class="prove_top_title"><b>确认订单</b></div>
 			<div class="prove_top_mark"  @click="backpay"><img src="../assets/backwhite.png"></div>
 		</div>
+		<div class="prove_address">
+			<div class="text" style="text-overflow:ellipsis;">西安邮电大学长安校区东区教学楼陕西省西安市长安区韦曲街道西长安街fz155</div>
+		</div>
 		<div class="prove_who">
 			<div>梁博</div>
 			<div>18149498392</div>
@@ -54,11 +57,13 @@
 <script type="text/javascript">
 	import { mapState} from 'vuex'
     import gopay from './gopay.vue'
+    import axios from 'axios';
 	export default{
 		data(){
 			return{
 				items:this.$store.getters.vegetables,
-				judge:true
+				judge:true,
+				address:"",
 			}
 		},
 		methods:{
@@ -85,6 +90,23 @@
 	    components:{gopay},
 	    mounted:function(){
 	    	this.judgemessage();
+	    	//请求个人信息对象
+			var self = this;
+			axios.defaults.withCredentials = true;
+			axios.get('http://localhost:1337/user')
+				.then(function (data) {
+					if(data.data.err==false){
+						self.address = data.data.result;
+				    }
+				    else{
+				    	console.log("失败");
+				    }
+				  })
+				.catch(function (error) {
+					console.log(error);
+				});
+	    	//请求用户地址
+
 	    }
 	}
 </script>
@@ -106,19 +128,35 @@
 	.prove_top{
 		position: fixed;
 		width: 100%;
-		height: 16vw;
+		height: 12vw;
 		top: 0;
 		overflow: hidden;
 /*		padding-bottom: 4vw;*/
 		background-image: linear-gradient(90deg,#0af,#0085ff);
 		z-index: 1;
 	}
+	.prove_address{
+		position: relative;
+		width: 90%;
+		margin: auto;
+		height: 7vw;
+		line-height: 7vw;
+		padding-top: 18vw;
+		font-size: 24px;
+		color: white;
+		font-weight: 700;
+	}
+	.prove_address .text{
+		white-space:nowrap; 
+		width:100%; 
+		overflow:hidden; 
+	}
 	.prove_who{
 		position: relative;
 		width: 100%;
 		height: auto;
+		padding-top: 1vw;
 		overflow: hidden;
-		padding-top: 22vw;
 		background-image: linear-gradient(90deg,#0af,#0085ff);
 	}
 	.prove_top_mark{
@@ -137,7 +175,7 @@
 		position: absolute;
 		width:100%;
 		height: 100%;
-		line-height: 16vw;
+		line-height: 12vw;
 		text-align: center;
 		color: white;
 		z-index: 3;

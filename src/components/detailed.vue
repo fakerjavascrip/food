@@ -10,19 +10,14 @@
 			<div class="detailed_mark_img">
 				<img src="../assets/egg.png">
 			</div>
-			<div class="detailed_mark_state"><b>订单已取消</b></div>
-			<div class="detailed_mark_again">再去购买</div>
+			<div class="detailed_mark_state"><b>{{mark}}</b></div>
+			<div class="detailed_mark_again" @click ="backmajor">再去购买</div>
 		</div>
 		<div class="detailed_bottom">
-			<div class="detailed_good_information">
-				<div class="detailed_good_num">16</div>
-				<div class="detailed_good_name">鸡蛋</div>
-				<div class="detailed_good_unit">斤</div>
-			</div>
-			<div class="detailed_good_information">
-				<div class="detailed_good_num">16</div>
-				<div class="detailed_good_name">大白菜</div>
-				<div class="detailed_good_unit">斤</div>
+			<div v-for="(item,index) in items" class="detailed_good_information">
+				<div class="detailed_good_num">{{item.num}}</div>
+				<div class="detailed_good_name">{{item.name}}</div>
+				<div class="detailed_good_unit">{{item.unit}}</div>
 			</div>
 			<div class="detailed_transport">
 				<div class="detailed_transport_mark">配送信息</div>
@@ -53,15 +48,52 @@
 	</div>
 </template>
 <script type="text/javascript">
+	import axios from'axios';
+	import { mapState} from 'vuex';
 	export default{
 		data(){
-			return{}
+			return{
+				items:[],
+				mark:"",
+			}
 		},
 		methods:{
 			backorder:function(){
 				this.$router.push('/major/order');
+			},
+			backmajor:function(){
+				this.$router.push('/major');
 			}
-		}
+		},
+		mounted:function(){
+			var now,date,time;
+			date=JSON.parse(localStorage.getItem('date'));
+			now = new Date();
+			time = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+			if(date == time){
+				this.mark="订单未送达"
+			}
+			else{
+				this.mark="订单已送达"
+			}
+			//查找当前日期全部订单
+			var self = this;
+			axios.defaults.withCredentials = true;
+			axios.get('http://localhost:1337/user/ufgdate?date='+date)
+				.then(function (data) {
+					if(data.data.err==false){
+				    	self.items = data.data.result;
+				    	console.log(self.items);
+				    }
+				    else{
+				    	console.log("失败");
+				    }
+				  })
+				.catch(function (error) {
+					console.log(error);
+				});
+			//爬取个人信息
+		},
 	}
 </script>
 <style type="text/css">

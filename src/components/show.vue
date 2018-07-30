@@ -117,10 +117,28 @@
 				else if(item.number>0){
 					item.display=true;
 				}
+			},
+			vaddress:function(){
+				var self = this;
+				axios.defaults.withCredentials = true;
+				axios.get('http://localhost:1337/user/ufgdate?date='+date)
+				.then(function (data) {
+					if(data.data.err==false){
+					    self.items = data.data.result;
+					    console.log(self.items);
+					}
+					else{
+					    console.log("失败");
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
 			}
 		},
 		mounted :function(){
 			this.citem();
+			this.vaddress();
 		},
 		computed:{
             ...mapState([

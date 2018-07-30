@@ -10,7 +10,7 @@
 			<div class="initial_contacts">
 				<div class="initial_name"><b>联系人</b></div>
 				<div class="initial_name_input">
-					<input type="text" placeholder="你的名字" name="">
+					<input type="text" placeholder="店铺名字" name="">
 				</div>
 			</div>
 			<div class="initial_contacts">
@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class="initial_bottom">
-			<div class="initial_button"><b>确定</b></div>
+			<div class="initial_button" @click ="addaddress"><b>确定</b></div>
 		</div>
 	</div>
 </template>
@@ -39,7 +39,27 @@
 		methods:{
 			backperson:function(){
 				this.$router.push('/major/person');
+			},
+			addaddress:function(){
+				var self = this;
+				axios.defaults.withCredentials = true;
+				axios.get('http://localhost:1337/user/ufgdate?date='+date)
+					.then(function (data) {
+						if(data.data.err==false){
+					    	self.items = data.data.result;
+					    	console.log(self.items);
+					    }
+					    else{
+					    	console.log("失败");
+					    }
+					  })
+					.catch(function (error) {
+						console.log(error);
+					});
 			}
+		},
+		mounted:function(){
+
 		}
 	}
 </script>

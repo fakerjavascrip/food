@@ -1,7 +1,7 @@
 var express = require('express');
 var request = require('request');
 var mysql = require('mysql');
-var user_find_goods = function(date,person,callback){
+var user_find_date = function(person,callback){
 	var result;
 	//获取date
 	pool = mysql.createPool({
@@ -20,7 +20,7 @@ var user_find_goods = function(date,person,callback){
 			callback(result);
 		}
 		else{
-				connection.query("select * from user where date=? and person =? ",[date,person],function(err,result){
+				connection.query("select distinct date from user where person =? order by date desc",[person],function(err,result){
 					if(err){
 						result = {
 							err:true,
@@ -39,4 +39,4 @@ var user_find_goods = function(date,person,callback){
 
 	})
 }	
-module.exports = user_find_goods;
+module.exports = user_find_date;

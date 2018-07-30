@@ -18,6 +18,8 @@ export default new Vuex.Store({
 	    gopayshow:false,
 	    //是否可以让它提交订单
 	    plus: false,
+	    //订单详细内容
+	    date:"",
 	    message:"",
 	    goods: [
       		{ name: "大白菜", num: 0, unit: "斤" },
@@ -123,6 +125,10 @@ export default new Vuex.Store({
 			},
 			newmessage(state,information){
 				state.message = information;
+			},
+			updatedate(state,date){
+				state.date =date;
+				window.localStorage.setItem('date',JSON.stringify(date));
 			}
 		},
 		//异步的调用mutations

@@ -29,8 +29,14 @@ var Change_goods_photo  = require('./administrator/change_goods_photo.js');
 var Find_goods_all = require('./administrator/find_goods_all.js');
 var Find_goods_num = require('./administrator/find_goods_num.js');
 var Find_person_goods = require('./administrator/find_person_goods.js');
+//用户添加商品
 var User_add_goods = require('./user/user_add_goods.js');
+//用户修改当天商品数量
 var User_change_goods = require('./user/user_change_goods.js');
+//用户查找自己哪些日期有订单
+var User_find_date = require('./user/user_find_date');
+//用户查找某日期下提交的订单
+var User_find_goods = require('./user/user_find_goods');
 var A_change_goods = require('./administrator/a_change_goods.js');
 var A_unit_goods = require('./administrator/a_unit_goods.js');
 var A_delete_goods = require('./administrator/a_delete_goods.js');
@@ -539,17 +545,10 @@ router.use('/abind',Session,function(req,res){
 	}
 })
 ///查找个人信息
-router.use('/findpersonal',Session,function(req,res,next){
+router.use('/ufperson',Session,function(req,res,next){
 	var phone,str,arr;
 	str = req.session.user;
 	arr = querystring.parse(str,"&","=");
-	if(req.body.phone){
-		phone = req.body.phone;
-	}
-	else if(req.query.phone){
-		phone =req.query.phone;
-	}
-	if(isphone(phone)){
 		if(arr[1]==1)
 		{
 			phone = arr[0];
@@ -557,25 +556,11 @@ router.use('/findpersonal',Session,function(req,res,next){
 				returnJson(req,res,result);
 			})
 		}
-		else if(arr[1]==2||arr[1]==3){
-			Find_personal(phone,function(result){
-				returnJson(req,res,result)
-			})
-		}
-		else{
-			result ={
-				err:true,
-				result:"权限不匹配"
-			}
-			returnJson(result);
-		}
-	}
-	else{
-		result = {
-			err:true,
-			result:"正则不匹配"
-		}
-	}
+		// else if(arr[1]==2||arr[1]==3){
+		// 	Find_personal(phone,function(result){
+		// 		returnJson(req,res,result)
+		// 	})
+		// }
 })
 //查看所有人的个人信息
 router.use('/findall',Session,function(res,res){
@@ -593,6 +578,24 @@ router.use('/findall',Session,function(res,res){
 			result:"权限不匹配"
 		}
 		returnJson(req,res,result);
+	}
+})
+//管理员查找某个人的信息
+router.use('afperson',function(req,res){
+	var str,arr,person;
+	str = req.session.user;
+	arr = querystring.parse(str,'&','=');
+	if(req.body.person){
+		person = req.body.person;
+	} 
+	else if(req.query.person){
+		person = req.query.person;
+	}
+	if(arr.user==person){
+
+	}
+	else if(){
+
 	}
 })
 //管理员上传物品文件信息 
@@ -781,28 +784,31 @@ router.use('/customers',Session,function(req,res){
 		returnJson(req,res,result);
 	}
 })
-//查找个人商品信息
-router.use('/ufgoods',Session,function(req,res){
-	var person;
-	//查询某个人全部信息
-	if(req.body.person){
-		person = req.body.person;
-	}
-	else if(req.query.person){
-		person = req.query.person;
-	}
-	if(isphone(person)){
-		User_find_goods(person,function(result){
-			returnJson(req,res,result);
-		});
-	}
-	else{
-		result = {
-			err:true,
-			result:"正则不匹配"
-		}
+//用户查找自己的购物日期
+router.use('/ufdate',Session,function(req,res){
+	var person,arr,str;
+	str = req.session.user;
+	arr = querystring.parse(str,'&','=');
+	person = arr.user;
+	User_find_date(person,function(result){
 		returnJson(req,res,result);
-	}
+	});
+})
+//用户查找自己某天的商品信息
+router.use('/ufgdate',Session,function(req,res,next){
+	var str,arr,person,date;
+	str = req.session.user;
+	arr = querystring.parse(str,"&","=");
+	person = arr.user;
+		if(req.body.date){
+			date = req.body.date;
+		}
+		else if(req.query.date){
+			date = req.query.date;
+		}
+		User_find_goods(date,person,function(result){
+			returnJson(req,res,result);
+		})
 })
 //用户自己修改当天商品数量
 router.use('/ucgnum',Session,customer,function(req,res){
