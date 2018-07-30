@@ -25,9 +25,9 @@
 				<div class="detailed_transport_time">
 					<div class="detailed_transport_div">送货地址:</div>
 					<div class="detailed_transport_long">
-						<p>梁博</p>
-						<p>18149498392</p>
-						<p>西安邮电大学长安校区东区教学楼韦曲街道西长安街 fz155</p>
+						<p>{{person.name}}</p>
+						<p>{{phone}}</p>
+						<p>{{person.address}}</p>
 					</div>
 				</div>
 				<div class="detailed_transport_time">
@@ -41,7 +41,7 @@
 					<div class="detailed_transport_div">下单方式:</div>在线下单
 				</div>
 				<div class="detailed_transport_time">
-					<div class="detailed_transport_div">下单时间:</div>2018-06-06 22:33
+					<div class="detailed_transport_div">下单时间:</div>{{date}}
 				</div>
 			</div>
 		</div>
@@ -55,6 +55,9 @@
 			return{
 				items:[],
 				mark:"",
+				person:{},
+				phone:"",
+				date:""
 			}
 		},
 		methods:{
@@ -63,35 +66,45 @@
 			},
 			backmajor:function(){
 				this.$router.push('/major');
+			},
+			findall:function(){
+				var now,time;
+				this.date=JSON.parse(localStorage.getItem('date'));
+				now = new Date();
+				time = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+				if(this.date == time){
+					this.mark="订单未送达"
+				}
+				else{
+					this.mark="订单已送达"
+				}
+				//查找当前日期全部订单
+				var self = this;
+				axios.defaults.withCredentials = true;
+				axios.get('http://localhost:1337/user/ufgdate?date='+this.date)
+					.then(function (data) {
+						if(data.data.err==false){
+					    	self.items = data.data.result;
+					    	console.log(self.items);
+					    }
+					    else{
+					    	console.log("失败");
+					    }
+					  })
+					.catch(function (error) {
+						console.log(error);
+					});
+			},
+			getperson:function(){
+				var block;
+				this.person = JSON.parse(localStorage.getItem('person'));
+				block = this.person.phone.substr(3, 4);
+				phone = this.phone = this.person.phone.replace(block, "****");
 			}
 		},
 		mounted:function(){
-			var now,date,time;
-			date=JSON.parse(localStorage.getItem('date'));
-			now = new Date();
-			time = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
-			if(date == time){
-				this.mark="订单未送达"
-			}
-			else{
-				this.mark="订单已送达"
-			}
-			//查找当前日期全部订单
-			var self = this;
-			axios.defaults.withCredentials = true;
-			axios.get('http://localhost:1337/user/ufgdate?date='+date)
-				.then(function (data) {
-					if(data.data.err==false){
-				    	self.items = data.data.result;
-				    	console.log(self.items);
-				    }
-				    else{
-				    	console.log("失败");
-				    }
-				  })
-				.catch(function (error) {
-					console.log(error);
-				});
+			this.findall();
+			this.getperson();
 			//爬取个人信息
 		},
 	}

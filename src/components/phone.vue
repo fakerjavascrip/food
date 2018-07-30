@@ -11,7 +11,7 @@
 				<div class="phone_vcode">获取验证码</div>
 				<div class="phone_name">手机号</div>
 				<div class="phone_name_input">
-					<input type="text" value="181****8392" name="">
+					<input type="text" readonly="readonly" v-model = "phone" value="181****8392" name="">
 				</div>
 			</div>
 			<div class="phone_contacts">
@@ -29,12 +29,21 @@
 <script type="text/javascript">
 	export default{
 		data(){
-			return{}
+			return{
+				person:{},
+				phone:""
+			}
 		},
 		methods:{
 			backperson:function(){
 				this.$router.push('/major/person');
 			}
+		},
+		mounted:function(){
+			var block;
+			this.person = window.JSON.parse(localStorage.getItem('person'))
+			block = this.person.phone.substr(3, 4);
+			this.phone = this.person.phone.replace(block, "****");
 		}
 	}
 </script>

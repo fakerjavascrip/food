@@ -7,14 +7,14 @@
 			<ul>
 				<li>
 					<b>店铺名</b>
-					<span style="color: #666;">哔哩哔哩 ></span>
+					<span style="color: #666;">{{person.name}} ></span>
 				</li>
 			</ul>
 			<h2>账号绑定</h2>
 			<ul>
 				<li>
 					<b>手机</b>
-					<span @click="changephone">181****8392 ></span>
+					<span @click="changephone">{{phone}} ></span>
 				</li>
 			</ul>
 			<h2>安全设置</h2>
@@ -38,7 +38,10 @@
 <script type="text/javascript">
 	export default{
 		data(){
-			return {}
+			return {
+				person:{},
+				phone:"",
+			}
 		},
 		methods:{
 			changephone:function(){
@@ -50,6 +53,12 @@
 			changepassword:function(){
 				this.$router.push('/password');
 			}
+		},
+		mounted:function(){
+			var block;
+			this.person = window.JSON.parse(localStorage.getItem('person'));
+			block = this.person.phone.substr(3, 4);
+			this.phone = this.person.phone.replace(block, "****");
 		}
 	}
 </script>

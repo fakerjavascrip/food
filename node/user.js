@@ -8,7 +8,7 @@ var querystring= require('querystring');
 var Register = require('./register/register.js');
 var Vcode = require('./register/vcode.js');
 var Login = require('./login/login.js');
-var Find_personal = require('./all/find_personal.js');
+var Find_person = require('./all/find_person.js');
 var Bind = require('./all/bind.js');
 //按商品的名字查找商品
 var Find_goods_name = require('./all/find_goods_name.js');
@@ -37,6 +37,8 @@ var User_change_goods = require('./user/user_change_goods.js');
 var User_find_date = require('./user/user_find_date');
 //用户查找某日期下提交的订单
 var User_find_goods = require('./user/user_find_goods');
+//用户更新上传自己的收货地址
+var User_update_address = require('./user/user_update_address');
 var A_change_goods = require('./administrator/a_change_goods.js');
 var A_unit_goods = require('./administrator/a_unit_goods.js');
 var A_delete_goods = require('./administrator/a_delete_goods.js');
@@ -546,21 +548,39 @@ router.use('/abind',Session,function(req,res){
 })
 ///查找个人信息
 router.use('/ufperson',Session,function(req,res,next){
-	var phone,str,arr;
+	var person,str,arr;
 	str = req.session.user;
 	arr = querystring.parse(str,"&","=");
-		if(arr[1]==1)
-		{
-			phone = arr[0];
-			Find_personal(phone,function(result){
-				returnJson(req,res,result);
-			})
+	person = arr.user;
+	Find_person(person,function(result){
+		returnJson(req,res,result);
+	})
+})
+//用户更新收获地址
+//update user address
+router.use('/uuaddress',Session,function(req,res){
+	var address,person,arr,str;
+	str = req.session.user;
+	arr = querystring.parse(str,"&","=");
+	person = arr.user;
+	if(req.body.address){
+		address = req.body.address;
+	}
+	else if(req.query.address){
+		address = req.query.address;
+	}
+	if(isWords(address)){
+		User_update_address(address,person,function(result){
+			returnJson(req,res,result);
+		})
+	}
+	else{
+		result = {
+			err:true,
+			result:"正则不匹配"
 		}
-		// else if(arr[1]==2||arr[1]==3){
-		// 	Find_personal(phone,function(result){
-		// 		returnJson(req,res,result)
-		// 	})
-		// }
+		returnJson(req,res,result);
+	}
 })
 //查看所有人的个人信息
 router.use('/findall',Session,function(res,res){
@@ -581,22 +601,17 @@ router.use('/findall',Session,function(res,res){
 	}
 })
 //管理员查找某个人的信息
+//验证管理和二级管理写个函数
 router.use('afperson',function(req,res){
 	var str,arr,person;
 	str = req.session.user;
 	arr = querystring.parse(str,'&','=');
 	if(req.body.person){
 		person = req.body.person;
-	} 
+	}
 	else if(req.query.person){
 		person = req.query.person;
-	}
-	if(arr.user==person){
-
-	}
-	else if(){
-
-	}
+	} 
 })
 //管理员上传物品文件信息 
 router.use('/addgoods', upload.single('file'),Session,administrator,function(req,res){

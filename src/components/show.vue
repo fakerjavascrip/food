@@ -45,6 +45,7 @@
      			select:"斤",
      			confirmgood:[],
      			shoppinggood:[],
+     			address:{},
      		}
 		}, 
 		methods:{
@@ -120,12 +121,16 @@
 			},
 			vaddress:function(){
 				var self = this;
+				var address;
 				axios.defaults.withCredentials = true;
-				axios.get('http://localhost:1337/user/ufgdate?date='+date)
+				axios.get('http://localhost:1337/user/ufperson/')
 				.then(function (data) {
 					if(data.data.err==false){
-					    self.items = data.data.result;
-					    console.log(self.items);
+						address = data.data.result[0];
+						window.localStorage.setItem('person',JSON.stringify(address));
+						if(address.address==null){
+							self.$router.push('/addaddress');
+						}
 					}
 					else{
 					    console.log("失败");

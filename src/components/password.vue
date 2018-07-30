@@ -9,30 +9,97 @@
 		<div class="password_center">
 			<ul>
 				<li class="password_mark">
-					<input type="text" placeholder="旧密码" name="">
+					<input type="password" v-model="password.old"  @blur="oldlose" placeholder="旧密码" name="">
+					<span v-show="show.first">密码长度为 6－20 位数字和字母</span>
 				</li>
 				<li class="password_mark">
-					<input type="text" placeholder="新密码" name="">
+					<input type="password" v-model="password.new1" @blur="new1lose" placeholder="新密码" name="">
+					<span v-show="show.second">密码长度为 6－20 位数字和字母</span>
 				</li>
 				<li class="password_mark">
-					<input type="text" placeholder="确认密码" name="">
+					<input type="password" v-model="password.new2" @blur="new2lose" placeholder="确认密码" name="">
+					<span v-show="show.third">两次密码输入不一致</span>
 				</li>
 			</ul>
 		</div>
 		<div class="password_bottom">
-			<div class="password_button">确认并保存</div>
+			<div class="password_button" @click="newpassword">确认并保存</div>
 		</div>
 	</div>
 </template>
 <script type="text/javascript">
+	import axios from 'axios'; 
 	export default{
 		data(){
-			return{}
+			return{
+				password:{
+					old:"",
+					new1:"",
+					new2:"",
+				},
+				show:{
+					first:false,
+					second:false,
+					third:false
+				}
+			}
 		},
 		methods:{
 			backperson:function(){
 				this.$router.push('/major/person');
+			},
+			oldlose:function(){
+				var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
+				if(this.password.old.match(reg)||this.password.old==""){
+				    this.show.first = false;
+				}
+				else{
+					this.show.first = true;
+				} 
+			},
+			new1lose:function(){
+				var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
+				if(this.password.new1.match(reg)||this.password.new1==""){
+				    this.show.second = false;
+				}
+				else{
+					this.show.second = true;
+				} 
+			},
+			new2lose:function(){
+				//不用加验证字母加数字的正则只需要新密码2和1比较即可
+				var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
+				if(this.show.second==false&&this.password.new1!=""&&this.password.new1!=this.password.new2){
+					this.show.third=true;
+				}
+				if(this.password.new2==""||this.password.new1==""||this.show.second==true||this.password.new1==this.password.new2){
+						this.show.third = false;
+				}
+			},
+			newpassword:function(){
+				alert("你好");
 			}
+		},
+		mounted:function(){
+				var self = this;
+				var address;
+				axios.defaults.withCredentials = true;
+				axios.get('http://localhost:1337/user/ufperson/')
+				.then(function (data) {
+					if(data.data.err==false){
+						address = data.data.result[0];
+						window.localStorage.setItem('person',JSON.stringify(address));
+						if(address.address==null){
+							self.$router.push('/addaddress');
+						}
+					}
+					else{
+					    console.log("失败");
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
 		}
 	}
 </script>
@@ -85,12 +152,16 @@
 	}
 	.password_center li{
 		width: 100%;
-		height: 11vw;
+		height: auto;
 		padding: 1.5vw 0 1.5vw 0;
+	}
+	.password_center span{
+		color: red;
+		font-size: 14px;
 	}
 	.password_center input{
 		width: 100%;
-		height: 100%;
+		height: 11vw;
 		background-color: #f2f2f2;
 		text-indent: 2vw;
 		font-size: 16px;

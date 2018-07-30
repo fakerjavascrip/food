@@ -10,19 +10,25 @@
 			<div class="initial_contacts">
 				<div class="initial_name"><b>联系人</b></div>
 				<div class="initial_name_input">
-					<input type="text" placeholder="店铺名字" name="">
+					<input type="text" readonly="readonly"  v-model="person.name" name="">
 				</div>
 			</div>
 			<div class="initial_contacts">
 				<div class="initial_name"><b>电话</b></div>
 				<div class="initial_name_input">
-					<input type="text" placeholder="爬取的电话" name="">
+					<input type="text" readonly="readonly" v-model="phone" name="">
 				</div>
 			</div>
-			<div class="initial_contacts">
+			<div v-show="show" class="initial_contacts">
 				<div class="initial_name"><b>地址</b></div>
 				<div class="initial_name_input">
-					<input type="text" placeholder="详细地址" name="">
+					<input type="text" v-model="person.address"  placeholder="请填写详细地址" name="">
+				</div>
+			</div>
+			<div v-show="!show" class="initial_contacts">
+				<div class="initial_name"><b>地址</b></div>
+				<div class="initial_name_input">
+					<input type="text" v-model="person.address" readonly="readonly">
 				</div>
 			</div>
 		</div>
@@ -32,34 +38,51 @@
 	</div>
 </template>
 <script type="text/javascript">
+	import axios from 'axios';
 	export default{
 		data(){
-			return{}
+			return{
+				person:{},
+				address:"",
+				show:true,
+				phone:""
+			}
 		},
 		methods:{
 			backperson:function(){
 				this.$router.push('/major/person');
 			},
 			addaddress:function(){
-				var self = this;
-				axios.defaults.withCredentials = true;
-				axios.get('http://localhost:1337/user/ufgdate?date='+date)
-					.then(function (data) {
-						if(data.data.err==false){
-					    	self.items = data.data.result;
-					    	console.log(self.items);
-					    }
-					    else{
-					    	console.log("失败");
-					    }
-					  })
-					.catch(function (error) {
-						console.log(error);
-					});
+				if(this.show==true){
+					var self = this;
+					axios.defaults.withCredentials = true;
+					axios.get('http://localhost:1337/user/uuaddress?address='+self.person.address)
+						.then(function (data) {
+							console.log(data);
+							if(data.data.err==false){
+								self.person.address=self.address;
+						    }
+						  })
+						.catch(function (error) {
+							console.log(error);
+						});
+				}
+				else{
+					this.$router.push('/major/person');
+				}
 			}
 		},
 		mounted:function(){
-
+			var block;
+			this.person = window.JSON.parse(localStorage.getItem('person'))
+			block = this.person.phone.substr(3, 4);
+			this.phone = this.person.phone.replace(block, "****");
+			if(this.person.address==null){
+				this.show = true;
+			}
+			else{
+				this.show = false;
+			}
 		}
 	}
 </script>
@@ -103,7 +126,7 @@
 	.initial_center{
 		position: relative;
 		height: auto;
-		padding: 12vw 0 0 4vw;
+		padding: 12vw 0 4vw 4vw;
 		background-color: white;
 	}
 	.initial_contacts{
@@ -126,6 +149,9 @@
 		padding: 4vw 0 4vw 0;
 		overflow: auto;
 		padding-right: 3vw;
+		border-style: solid;
+		border-width: 0 0  0.016px 0;
+		border-color: #e6e6e6;
 	}
 	.initial_name_input input{
 		width: auto;
@@ -133,9 +159,9 @@
 		height: 100%;
 		border-width: 0px;
 		outline: none;
-		color: #666;
 		font-size: 16px;
 		letter-spacing: 0.5px;
+		color: black;
 	}
 	.initial_bottom{
 		position: relative;

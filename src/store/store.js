@@ -25,7 +25,7 @@ export default new Vuex.Store({
       		{ name: "大白菜", num: 0, unit: "斤" },
     		],
     	//购物车
-    	shopping:[]
+    	shopping:[],
 		},
 		getters: {
 			doneTodos: state => {
@@ -129,7 +129,7 @@ export default new Vuex.Store({
 			updatedate(state,date){
 				state.date =date;
 				window.localStorage.setItem('date',JSON.stringify(date));
-			}
+			},
 		},
 		//异步的调用mutations
 		actions: {
