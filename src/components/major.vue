@@ -73,16 +73,19 @@
         		this.first=true;
         		this.second=false;
         		this.third=false;
+        		document.getElementsByTagName("body")[0] .style.backgroundColor="#f5f5f5";
         	}
         	else if(this.$route.path=='/major/order'){
         		this.first=false;
         		this.second=true;
         		this.third=false;
+        		document.getElementsByTagName("body")[0] .style.backgroundColor="#f5f5f5";
         	}
         	else if(this.$route.path=='/major/person'){
         		this.first=false;
         		this.second=false;
         		this.third=true;
+        		document.getElementsByTagName("body")[0] .style.backgroundColor="#f5f5f5";
         	}
         } 
 	}

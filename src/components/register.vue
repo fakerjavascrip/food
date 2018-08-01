@@ -30,19 +30,42 @@
 		},
 		methods : {
 			register:function(){
-				axios.get('http://localhost:1337/user/register',{
-					params:{
-						name: this.name,
-						phone: this.phone,
-						password: this.password,
-						vcode: this.vcode
-					}
-				}).then(function (response) {
-				    console.log(response);
-				  })
-				  .catch(function (error) {
-				    console.log(error);
-				  });
+				var reg1,reg2,reg3,reg4;
+				//店铺名正则
+				reg1=/[^/]{1,15}$/
+				//手机正则
+				reg2=/^[1][3,4,5,7,8][0-9]{9}$/;
+				//密码正则
+				reg3=/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/;
+				//验证码正则
+				reg4=/^\d{4}$/;
+				if(!reg1.test(this.name)){
+					alert("店铺名正则")
+				}
+				else if(!reg2.test(this.phone)){
+					alert("手机号正则");
+				}
+				else if(!reg3.test(this.password)){
+					alert("密码正则")
+				}
+				else if(!reg4.test(this.vcode)){
+					alert("验证码正则");
+				}
+				else{
+					axios.get('http://localhost:1337/user/register',{
+						params:{
+							name: this.name,
+							phone: this.phone,
+							password: this.password,
+							vcode: this.vcode
+						}
+					}).then(function (response) {
+					    console.log(response);
+					  })
+					  .catch(function (error) {
+					    console.log(error);
+					  });
+				}
 			},
 			getvcode: function(){
 				axios.get('http://localhost:1337/user/vcode',{

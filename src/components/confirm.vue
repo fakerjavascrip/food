@@ -50,7 +50,7 @@
 				}
 			},
 			cleargoods:function(){
-				this.$store.commit('cleargoods');
+				this.$store.commit('clear');
 			},
 			hidden:function(){
 				this.$store.commit('changeconfirm');

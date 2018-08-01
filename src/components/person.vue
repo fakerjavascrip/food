@@ -14,7 +14,7 @@
 			<ul>
 				<li>
 					<b>手机</b>
-					<span @click="changephone">{{phone}} ></span>
+					<span style="color: #666;" >{{phone}} ></span>
 				</li>
 			</ul>
 			<h2>安全设置</h2>
@@ -32,10 +32,11 @@
 				</li>
 			</ul>
 		</div>
-		<div class="person_bottom"><b>退出登录</b></div>	
+		<div class="person_bottom" @click = "backlogin"><b>退出登录</b></div>	
 	</div>
 </template>
 <script type="text/javascript">
+	import axios from 'axios';
 	export default{
 		data(){
 			return {
@@ -52,7 +53,22 @@
 			},
 			changepassword:function(){
 				this.$router.push('/password');
-			}
+			},
+			backlogin:function(){
+				this.clearsession();
+				this.$router.push('/');
+			},
+			clearsession:function(){
+				var self = this;
+				axios.defaults.withCredentials = true;
+				axios.get('http://localhost:1337/user/close/')
+				.then(function(data){
+					console.log(data);
+				})
+				.catch(function(error){
+					console.log(err);
+				})
+			},
 		},
 		mounted:function(){
 			var block;

@@ -14,7 +14,7 @@
 						<div class="show_num_mark">购买数量</div>
 						<div class="show_num_change">
 							<button class="show_num_reduce" @click='changenum(item,-1)'><img src="../assets/reduce.png"></button>
-							<input type="text" v-model="item.number"  @blur="leaves(item)"  onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" class="show_num_show">
+							<input type="text" v-model="item.number"   @blur="leaves(item)"  onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" class="show_num_show">
 							<button class="show_num_add"  @click='changenum(item,1)'><img src="../assets/add.png"></button>	
 						</div>
 							<select v-model="item.select" class="show_unit">
@@ -84,9 +84,11 @@
 						}
 					}
 				}
+				item.number=item.number.toFixed(1);
 			},
 			addshow(item){
 				item.number=parseFloat(item.number);
+				item.number = item.number.toFixed(1);
 				item.display = false;
 				//js的深拷贝,每次开辟新的空间
 				function deepCopy(p, c) {
@@ -112,6 +114,7 @@
 					item.number =0;
 				}
 				item.number = parseFloat(item.number);
+				item.number = item.number.toFixed(2);
 				if(item.number==0){
 					item.display = false;
 				}
@@ -155,11 +158,11 @@
 <style type="text/css">
 	.show_submit{
 		position: relative;
-		width: 65px;
-		height: 20px;
+		width: 20vw;
+		height: 8vw;
 		text-align: center;
 		float: right;
-		line-height: 20px;
+		line-height: 8vw;
 		font-size: 14px;
 		border-radius: 3px;
 		background-color: #0af;
@@ -168,7 +171,7 @@
 	.show_child_second{
 		margin-top: 10px;
 		position: relative;
-		height: 20px;
+		height: 8vw;
 		float: right;
 		width: 40%;
 		padding: 0 15px 0px 15px;
@@ -194,7 +197,7 @@
 	.show_child{
 		position: relative;
 		width: 100%;
-		height: 95px;
+		height: 28vw;
 		margin: auto;
 		padding-top: 10px;
 		padding-bottom: 15px;
@@ -206,25 +209,25 @@
 	}
 	.show_child_first{
 		position: relative;
-		height: 100px;
+		height: 30vw;
 		width: 94%;
 		padding: 0 3% 0px 3%;
 		overflow: hidden;
 	}
 	.show_child_img{
-		width: 100px;
-		height: 100px;
+		width: 22vw;
+		height: 22vw;
 		position: relative;
 		border-radius: 3px;
 		overflow: hidden;
 		float: left;
 	}
 	.show_child_img img{
-		width: 99px;
-		height: 99px;
+		width: 21.8vw;
+		height: 21.8vw;
 		border-radius: 3px;
 		border-style: solid;
-		border-width: 0.2px;
+		border-width: 0.1vw;
 		border-color: gray;
 	}
 	.show_child_p{
@@ -242,7 +245,7 @@
 		position: relative;
 		overflow: hidden;
 		width: auto;
-		height: 30px;
+		height: 10vw;
     	color: rgba(0,0,0,.8);
     	padding-left: 20px;
     	padding-top: 2.5px;
@@ -250,7 +253,7 @@
 	.show_num_mark{
 		position: relative;
 		width: auto;
-		height: 30px;
+		height: 10vw;
 		margin-right: 10px;
 		float: left;
 		font-size: 14px;
@@ -259,13 +262,13 @@
 	.show_num_change{
 		position: relative;
 		float: left;
-		width: 130px;
-		height: 30px;
+		width: 32vw;
+		height: 10vw;
 		overflow: hidden;
 	}
 	.show_num_reduce{
-		width: 22px;
-		height: 21px;
+		width: 6vw;
+		height: 6vw;
 		float: left;
 		font-size: 14px;
 		margin: 5px 5px 0px 0px;
@@ -277,14 +280,14 @@
 		border-radius: 50%;
 	}
 	.show_num_reduce img{
-		width: 20px;
-		height: 20px;
+		width: 6vw;
+		height: 6vw;
 		border-radius: 50%;
 	}
 	.show_num_add{
 		margin-top: 2.5px;
-		width: 22px;
-		height: 22px;
+		width: 6vw;
+		height: 6vw;
 		margin: 5px 0px 0px 5px;
 		float: left;
 		outline: none;
@@ -295,14 +298,14 @@
 		border-radius: 50%;
 	}
 	.show_num_add img{
-		width: 20px;
-		height: 20px;
+		width: 6vw;
+		height: 6vw;
 		border-radius: 50%;
 	}
 	.show_num_show{
 		position: relative;
-		width: 60px;
-		height: 28px;
+		width: 12vw;
+		height: 8vw;
 		border-width: 1px;
 		border-style: solid;
 		border-color: #999;
@@ -310,30 +313,30 @@
 		text-align: center;
 		line-height: 30px;
 		font-size: 14px;
-		margin: 0 5px 0 5px;
+		margin: 0 1vw 0 1vw;
 		outline: none;
 		border-radius: 15px;
 	}
 	.show_unit{
 		position: relative;
 		float: left;
-		width: 40px;
+		width: 10vw;
 /*		margin-left: 10px;*/
-		height: 30px;
+		height: 10vw;
 		outline: none;
 		appearance:none;
-		line-height: 30px;
+		line-height: 10vw;
 		background-color: white;
 		font-size: 14px;
 		border-radius: 3px;
-		text-indent: 18px;
+		text-indent: 4vw;
 	}
 	.show_unit_mark{
 		position: relative;
 		margin-top: 5px;
-		width: 15px;
+		width: 3vw;
 		height: 15px;
-		padding-bottom: 10px;
+		padding-bottom: 2vw;
 		float: left;
 	}
 	.show_unit_mark img{

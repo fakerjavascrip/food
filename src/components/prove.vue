@@ -4,17 +4,17 @@
 			<div class="prove_top_title"><b>确认订单</b></div>
 			<div class="prove_top_mark"  @click="backpay"><img src="../assets/backwhite.png"></div>
 		</div>
-		<div class="prove_address">
-			<div class="text" style="text-overflow:ellipsis;">西安邮电大学长安校区东区教学楼陕西省西安市长安区韦曲街道西长安街fz155</div>
+		<div class="prove_address"> 
+			<div class="text"  style="text-overflow:ellipsis;">{{person.address}}</div>
 		</div>
 		<div class="prove_who">
-			<div>梁博</div>
-			<div>18149498392</div>
+			<div>{{person.name}}</div>
+			<div>{{person.phone}}</div>
 		</div>
 		<div class="prove_center">
 			<div class="prove_center_date">
 				<div class="prove_date_mark">下单时间</div>
-				<div class="prove_date_time">当天时间(2017-7-24)</div>
+				<div class="prove_date_time">当天时间({{date}})</div>
 			</div>
 			<div class="prove_center_kind">
 				<div class="prove_kind_mark">下单方式</div>
@@ -37,7 +37,7 @@
 		<div class="prove_bottom_mark">
 			<div class="prove_mark_prove">
 				<div class="prove_mark_mark">预计配寄时间</div>
-				<div class="prove_mark_message">2017-7-25</div>
+				<div class="prove_mark_message">{{tdate}}</div>
 			</div> 
 			<div class="prove_mark_prove">
 				<div class="prove_mark_mark">发票信息</div>
@@ -47,7 +47,7 @@
 				<div v-show="judge" class="prove_mark_mark">订单备注</div>
 				<div v-show="judge" class="prove_mark_message" @click = "special">请选择<b style="font-size:20px; ">></b></div>
 				<div v-show="!judge" class="prove_message">{{message}}</div>
-				<div v-show="!judge" class="prove_message_mark" @click = "special">></div>
+				<div v-show="!judge" class="prove_message_mark" @click = "special">请修改 ></div>
 			</div>
 		</div>
 
@@ -63,9 +63,13 @@
 			return{
 				items:this.$store.getters.vegetables,
 				judge:true,
-				address:"",
+				person:{},
+				date:"",
+				tdate:"",
 			}
 		},
+
+	    components:{gopay},
 		methods:{
 			special:function(){
 				this.$router.push('/determine')
@@ -78,34 +82,27 @@
 				if(this.message!=""){
 					this.judge=false;
 				}
+				else{
+					this.judge=true;
+				}
+				this.person = window.JSON.parse(localStorage.getItem('person'));
+			},
+			nowdate:function(){
+				var time;
+				time = new Date();
+				this.date= time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDate();
+				var time2 =  new Date(time.getTime() + 24*60*60*1000);
+				this.tdate = time2.getFullYear()+"-"+(time2.getMonth()+1)+"-"+time2.getDate();
 			}
 		},
 	    computed:{
 	        ...mapState([
-	        'confirmshow',
-	        'gopayshow',
 	        'message'
 	        ]),
 	    }, 
-	    components:{gopay},
 	    mounted:function(){
+	    	this.nowdate();
 	    	this.judgemessage();
-	    	//请求个人信息对象
-			var self = this;
-			axios.defaults.withCredentials = true;
-			axios.get('http://localhost:1337/user')
-				.then(function (data) {
-					if(data.data.err==false){
-						self.address = data.data.result;
-				    }
-				    else{
-				    	console.log("失败");
-				    }
-				  })
-				.catch(function (error) {
-					console.log(error);
-				});
-	    	//请求用户地址
 
 	    }
 	}
@@ -363,7 +360,7 @@
 	}
 	.prove_message{
 		position: relative;
-		width: 85vw;
+		width: 70vw;
 		height: 100%;
 		float: left;
 		line-height: 6vw;
@@ -375,7 +372,7 @@
 		position: relative;
 		width: 100%; 
 		height: 100%;
-		margin-left: 85vw;
+		margin-left: 70vw;
 		line-height: 6vw;
 		font-weight: 700;
 		font-size: 19px;

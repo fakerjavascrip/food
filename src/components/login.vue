@@ -4,7 +4,7 @@
 				<input type="text" v-model="phone" name="" placeholder="手机号">
 			</div>
 			<div class="login_password">
-				<input type="text" v-model="password" name="" placeholder="密码">
+				<input type="password" v-model="password" name="" placeholder="密码">
 			</div>
 			<div class="login_prompt">
 				<p>温馨提示：使用订了么注册后的手机号登录,并且代表您已同意<a href="#">《用户服务协议》</a></p>
@@ -17,37 +17,53 @@
 </template> 
 <script type="text/javascript">
 	import axios from 'axios';
-
+	import {mapState} from 'vuex';
 	export default{
 		data(){
 			return{
 				phone:'18149498393',
-				password:'node123ndas',
+				password:'node123',
 			}
 		},
 		methods : {
 			login:function(){
-				// axios.create({
-				//    headers: {'content-type': 'application/x-www-form-urlencoded'},
-				//    withCredentials: true
-				// });
-				var self = this;
-				axios.defaults.withCredentials = true;
-				axios.get('http://localhost:1337/user/login?phone='+this.phone+'&password='+this.password)
-				  .then(function (data) {
-				  	console.log(data);
-				    if(data.data.err==false){
-					    self.$router.push('/major');
-				    }
-				    else{
-				    	console.log("失败");
-				    }
-				  })
-				  .catch(function (error) {
-				    console.log(error);
-				  });
+				//验证手机号的正则
+				var reg1=/^[1][3,4,5,7,8][0-9]{9}$/;
+				//验证密码的正则
+				var reg2 = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
+				if(!reg1.test(this.phone)){
+					//弹手机号不对的弹窗
+					this.$store.commit('changetips');
+					console.log(this.tipsshow);
+				}
+				else if(!reg2.test(this.password)){
+					//弹密码不对的弹窗
+					alert("密码的格式不对")
+				}
+				else{
+					var self = this;
+					axios.defaults.withCredentials = true;
+					axios.get('http://localhost:1337/user/login?phone='+this.phone+'&password='+this.password)
+					  .then(function (data) {
+					  	console.log(data);
+					    if(data.data.err==false){
+						    self.$router.push('/major');
+					    }
+					    else{
+					    	console.log("失败");
+					    }
+					  })
+					  .catch(function (error) {
+					    console.log(error);
+					  });
+				}
 			}
-		}
+		},
+		computed:{
+            ...mapState([
+            	'tipsshow'
+            ]),
+		},
 	}	
 </script>
 <style type="text/css">

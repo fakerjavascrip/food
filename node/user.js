@@ -9,7 +9,6 @@ var Register = require('./register/register.js');
 var Vcode = require('./register/vcode.js');
 var Login = require('./login/login.js');
 var Find_person = require('./all/find_person.js');
-var Bind = require('./all/bind.js');
 //按商品的名字查找商品
 var Find_goods_name = require('./all/find_goods_name.js');
 var Vcipher = require('./user/vcipher');
@@ -34,11 +33,15 @@ var User_add_goods = require('./user/user_add_goods.js');
 //用户修改当天商品数量
 var User_change_goods = require('./user/user_change_goods.js');
 //用户查找自己哪些日期有订单
-var User_find_date = require('./user/user_find_date');
+var User_find_date = require('./user/user_find_date.js');
 //用户查找某日期下提交的订单
-var User_find_goods = require('./user/user_find_goods');
+var User_find_goods = require('./user/user_find_goods.js');
 //用户更新上传自己的收货地址
 var User_update_address = require('./user/user_update_address');
+//用户密码修改密码
+var Upcipher = require('./user/user_password_cipher.js');
+//用户更换绑定手机号
+// var User_bind_phone = require('./user/user_bind_phone.js');
 var A_change_goods = require('./administrator/a_change_goods.js');
 var A_unit_goods = require('./administrator/a_unit_goods.js');
 var A_delete_goods = require('./administrator/a_delete_goods.js');
@@ -422,6 +425,33 @@ router.use('/cipher',Session,function(res,req,next){
 		returnJson(req,res,result)
 	}
 })
+//用户密码修改密码 user password cipher  
+router.use('/upcipher',Session,function(req,res,next){
+	var session,person,password,npassword,str,arr;
+	str = req.session.user;
+	arr = querystring.parse(str,'&','=');
+	person = arr.user;
+	if(req.body.password){
+		password = req.body.password;
+		npassword = req.body.npassword;
+	}
+	else if(req.query.password){
+		password = req.query.password;
+		npassword = req.query.npassword;
+	}
+	if(isPassword(password)&&isPassword(npassword)){
+		Upcipher(person,password,npassword,function(result){
+			returnJson(req,res,result);
+		})
+	}
+	else{
+		result = {
+			err:true,
+			result:"正则不匹配"
+		}
+		returnJson(req,res,result)
+	}
+})
 //普通用户短信验证码修改密码
 router.use('/vcipher',Session,function(req,res){
 	var npassword,vcode,str,arr;
@@ -457,12 +487,12 @@ router.use('/vcipher',Session,function(req,res){
 		returnJson(req,res,result);
 	}
 })
-//修改手机号发送验证码
-router.use('/bind',Session,function(req,res){
+//用户修改手机号发送验证码
+router.use('/sendbind',Session,function(req,res){
 	var phone,str,arr,vcode;
 	str = req.session.usr;
 	arr = querystring.parse(str,"&","=");
-		phone = arr[0];
+		phone = arr.user;
 		vcode = Math.round(Math.random() * (9999-1000)) + 1000;
 		req.session.user = req.session.user + "&pvcode="+vcode; 
 		///////发送验证码给手机
@@ -473,44 +503,44 @@ router.use('/bind',Session,function(req,res){
 		}
 		returnJson(req,res,result);
 })
-//修改手机号绑定
-router.use('/ubind',Session,function(req,res){
-	var phone,nphone,vcode,str,arr;
-	str = req.session.user;
-	arr = querystring.parse(str,"&","=");
-	if(req.body.phone){
-		//用户验证码修改手机号绑定
-		phone = req.body.phone;
-		nphone = req.body.nphone;
-		vcode = req.body.vcode;
-	}
-	else if(req.query.phone){
-		phone = req.query.phone;
-		nphone= req.query.nphone;
-		vcode = req.query.vcode;
-	}
-	if(isphone(phone)&&isphone(nphone)&&isVcode(vcode)){
-		if(vcode==arr[3]&&phone==arr[0])
-		{
-			Bind(phone,nphone,function(result){
-				returnJson(req,res,result);
-			})
-		}
-		else{
-			result = {
-				err:true,
-				result:"验证码错误"
-			}
-			returnJson(req,res,result);
-		}
-	}
-	else{
-		result = {
-			err:true,
-			result:"正则不匹配"
-		}
-	}
-})
+//用户验证绑定手机的验证码
+//用户修改手机号绑定
+// router.use('/ubphone',Session,function(req,res){
+// 	var phone,nphone,vcode,str,arr;
+// 	str = req.session.user;
+// 	arr = querystring.parse(str,"&","=");
+// 	phone = arr.user;
+// 	if(req.body.nphone){
+// 		nphone = req.body.nphone;
+// 		vcode = req.body.vcode;
+// 	}
+// 	else if(req.query.nphone){
+// 		nphone= req.query.nphone;
+// 		vcode = req.query.vcode;
+// 	}
+// 	if(isphone(nphone)&&isVcode(vcode)){
+// 		if(vcode==arr.pvcode)
+// 		{
+// 			User_bind_phone(phone,nphone,function(result){
+// 				returnJson(req,res,result);
+// 			})
+// 		}
+// 		else{
+// 			result = {
+// 				err:true,
+// 				result:"验证码错误"
+// 			}
+// 			returnJson(req,res,result);
+// 		}
+// 	}
+// 	else{
+// 		result = {
+// 			err:true,
+// 			result:"正则不匹配"
+// 		}
+// 		returnJson(req,res,result);
+// 	}
+// })
 //一级管理直接修改手机号
 router.use('/abind',Session,function(req,res){
 	var phone,nphone;
@@ -556,7 +586,7 @@ router.use('/ufperson',Session,function(req,res,next){
 		returnJson(req,res,result);
 	})
 })
-//用户更新收获地址
+//用户更新收货地址
 //update user address
 router.use('/uuaddress',Session,function(req,res){
 	var address,person,arr,str;

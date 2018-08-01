@@ -21,6 +21,7 @@ export default new Vuex.Store({
 	    //订单详细内容
 	    date:"",
 	    message:"",
+	    tipsshow:true,
 	    goods: [
       		{ name: "大白菜", num: 0, unit: "斤" },
     		],
@@ -130,6 +131,16 @@ export default new Vuex.Store({
 				state.date =date;
 				window.localStorage.setItem('date',JSON.stringify(date));
 			},
+			clear(state){
+				state.shopping.splice(0,state.amount);
+				state.amount=0;
+				state.plus = false;
+				state.confirmshow = false;
+				state.message = "";
+			},
+			changetips(state){
+				state.tipsshow = false;
+			}
 		},
 		//异步的调用mutations
 		actions: {

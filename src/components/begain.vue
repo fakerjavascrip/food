@@ -40,6 +40,8 @@
 			},
 			clearall: function(){
 				this.$store.commit('cleargoods');
+				var t = document.getElementsByTagName('body')[0];
+				t.style.backgroundColor="#fff";
 			}
 		},
 		mounted:function(){

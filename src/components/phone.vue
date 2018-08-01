@@ -11,39 +11,78 @@
 				<div class="phone_vcode">获取验证码</div>
 				<div class="phone_name">手机号</div>
 				<div class="phone_name_input">
-					<input type="text" readonly="readonly" v-model = "phone" value="181****8392" name="">
+					<input type="text" readonly="readonly" v-model = "phone" name="">
 				</div>
 			</div>
 			<div class="phone_contacts">
 				<div class="phone_name">验证码</div>
 				<div class="phone_name_input">
-					<input type="text" placeholder="输入验证码" name="">
+					<input type="text" oninput="if(value.length>6) value=value.slice(0,6);" v-model="vcode" @blur="vcodelose" @keyup="vcodelose" placeholder="输入验证码" name="">
 				</div>
 			</div>
 		</div>
 		<div class="phone_bottom">
-			<div class="phone_button">验证后绑定手机号码</div>
+			<div class="phone_button" @click = "updatephone">验证后绑定手机号码</div>
 		</div>
 	</div>
 </template>
 <script type="text/javascript">
+	import axios from 'axios';
 	export default{
 		data(){
 			return{
 				person:{},
-				phone:""
+				phone:"",
+				vcode:"",
 			}
 		},
 		methods:{
+			getphone:function(){
+				var block;
+				this.person = window.JSON.parse(localStorage.getItem('person'));
+				block = this.person.phone.substr(3, 4);
+				this.phone = this.person.phone.replace(block, "****");
+			},
 			backperson:function(){
 				this.$router.push('/major/person');
+			},
+			// updatephone:function(){
+			// 	var patrn=/^(\w){6}$/;
+			// 	if (patrn.exec(this.vcode)){
+			// 		var self = this;
+			// 		var address;
+			// 		axios.defaults.withCredentials = true;
+			// 		axios.get('http://localhost:1337/user/ubphone?nphone='+)
+			// 		.then(function (data) {
+			// 			if(data.data.err==false){
+			// 				address = data.data.result[0];
+			// 				window.localStorage.setItem('person',JSON.stringify(address));
+			// 				if(address.address==null){
+			// 					self.$router.push('/addaddress');
+			// 				}
+			// 			}
+			// 			else{
+			// 			    console.log("失败");
+			// 			}
+			// 		})
+			// 		.catch(function (error) {
+			// 			console.log(error);
+			// 		});
+			// 	}
+			// },
+			vcodelose:function(){
+				var t = document.getElementsByClassName('phone_button')[0];
+				var patrn=/^(\w){6}$/;
+				if (patrn.exec(this.vcode)){
+					t.style.backgroundColor="#4cd964";
+				}
+				else{
+					t.style.backgroundColor="#ccc";
+				}
 			}
 		},
 		mounted:function(){
-			var block;
-			this.person = window.JSON.parse(localStorage.getItem('person'))
-			block = this.person.phone.substr(3, 4);
-			this.phone = this.person.phone.replace(block, "****");
+			this.getphone();
 		}
 	}
 </script>
@@ -148,12 +187,12 @@
 		height: 12vw;
 		margin: auto;
 		color: white;
-		background-color: #4cd964;
 		border-radius: 1vw;
 		margin-top: 6vw;
 		text-align: center;
 		line-height: 12vw;
 		font-size: 16.5px;
 		font-weight: 700;
+		background-color: #ccc;
 	}
 </style>

@@ -3,6 +3,8 @@
 <!--     在这个里可以放一些公共的组件 -->
     <confirm v-show="confirmshow"></confirm>
     <pay></pay>
+      <tips></tips>
+<!--     <popup></popup> -->
     <router-view/>
   </div>
 </template>
@@ -11,10 +13,11 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-
-    import confirm from './components/confirm.vue'
-    import pay from './components/pay.vue'
-    import gopay from './components/gopay.vue'
+    import confirm from './components/confirm.vue';
+    import pay from './components/pay.vue';
+    import gopay from './components/gopay.vue';
+    import popup from './components/popup.vue';
+    import tips from './components/tips.vue';
     import { mapState} from 'vuex'
     import { mapGetters} from 'vuex'
     import { mapMutations } from 'vuex'
@@ -29,7 +32,7 @@
         	plus:false,
         }
         }, 
-    components:{ confirm, pay ,gopay},
+    components:{ confirm, pay ,gopay,tips,popup},
     computed:{
         ...mapState([
         'confirmshow',
@@ -86,6 +89,7 @@
       background-color: blue;
     }
     #app {
+      position: relative;
     /*  font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;

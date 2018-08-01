@@ -102,6 +102,7 @@
 						}
 					}
 				}
+				item.number = item.number.toFixed(1);
 			},
 			notshow:function(item){
 				item.number=parseFloat(item.number);
@@ -159,7 +160,7 @@
 		margin: auto;
 		position: relative;
 		width: 100%;
-		height: 100px;
+		height: 28vw;
 		overflow: hidden;
 		justify-content:center;
 		display: flex;
@@ -169,7 +170,7 @@
 	}
 	.notfind_say_img{
 		position: relative;
-		width: 80px;
+		width: 26vw;
 		height: auto;
 		margin-top: 20px;
 	}
@@ -241,51 +242,53 @@
     	background-color: #999
 	}
 	.notfind_show_child{
-		width: 100%;
-		height: 95px;
 		position: relative;
+		width: 100%;
+		height: 28vw;
 		margin: auto;
-		margin-top: 1px;
 		padding-top: 10px;
 		padding-bottom: 15px;
 		list-style: none;
 		background-color: white;
-		margin-bottom: 10px;
-	}
+		border-style: solid;
+		border-color: #dbdbdb;
+		border-width: 0.016px;	}
 	.notfind_show_child_first{
 		position: relative;
-		height: 75px;
+		height: 20vw;
 		width: 94%;
 		padding: 0 3% 0px 3%;
 		overflow: hidden;
 	}
 	.notfind_show_child_second{
+		margin-top: 10px;
 		position: relative;
-		height: 20px;
-		width: 100%;
+		height: 8vw;
+		float: right;
+		width: 40%;
 		padding: 0 15px 0px 15px;
 	}
 	.notfind_show_child_img{
-		width: 74px;
-		height: 74px;
+		width: 22vw;
+		height: 22vw;
 		position: relative;
 		border-radius: 3px;
 		overflow: hidden;
 		float: left;
 	}
 	.notfind_show_child_img img{
-		width: 73px;
-		height: 73px;
+		width: 21.8vw;
+		height: 21.8vw;
 		border-radius: 3px;
 		border-style: solid;
-		border-width: 0.2px;
+		border-width: 0.1vw;
 		border-color: gray;
 	}
 	.notfind_show_child_p{
 		position: relative;
 		overflow: hidden;
 		width: auto;
-		height: 30px;
+		height: 10vw;
 		font-size: 18px;
 		line-height: 30px;
     	color: rgba(0,0,0,.8);
@@ -295,7 +298,7 @@
 		position: relative;
 		overflow: hidden;
 		width: auto;
-		height: 30px;
+		height: 10vw;
     	color: rgba(0,0,0,.8);
     	padding-left: 10px;
     	margin-top: 2.5px;
@@ -303,7 +306,7 @@
 	.notfind_show_num_mark{
 		position: relative;
 		width: auto;
-		height: 30px;
+		height: 10vw;
 		margin-right: 10px;
 		float: left;
 		font-size: 14px;
@@ -312,13 +315,13 @@
 	.notfind_show_num_change{
 		position: relative;
 		float: left;
-		width: 130px;
-		height: 30px;
+		width: 32vw;
+		height: 10vw;
 		overflow: hidden;
 	}
 	.notfind_show_num_reduce{
-		width: 22px;
-		height: 21px;
+		width: 6vw;
+		height: 6vw;
 		float: left;
 		font-size: 14px;
 		margin: 5px 5px 0px 0px;
@@ -330,14 +333,14 @@
 		border-radius: 50%;
 	}
 	.notfind_show_num_reduce img{
-		width: 20px;
-		height: 20px;
+		width: 6vw;
+		height: 6vw;
 		border-radius: 50%;
 	}
 	.notfind_show_num_add{
 		margin-top: 2.5px;
-		width: 22px;
-		height: 22px;
+		width: 6vw;
+		height: 6vw;
 		margin: 5px 0px 0px 5px;
 		float: left;
 		outline: none;
@@ -348,14 +351,14 @@
 		border-radius: 50%;
 	}
 	.notfind_show_num_add img{
-		width: 20px;
-		height: 20px;
+		width: 6vw;
+		height: 6vw;
 		border-radius: 50%;
 	}
 	.notfind_show_num_show{
 		position: relative;
-		width: 60px;
-		height: 28px;
+		width: 12vw;
+		height: 8vw;
 		border-width: 1px;
 		border-style: solid;
 		border-color: #999;
@@ -363,23 +366,23 @@
 		text-align: center;
 		line-height: 30px;
 		font-size: 14px;
-		margin: 0 5px 0 5px;
+		margin: 0 1vw 0 1vw;
 		outline: none;
 		border-radius: 15px;
 	}
 	.notfind_show_unit{
 		position: relative;
 		float: left;
-		width: 40px;
+		width: 10vw;
 /*		margin-left: 10px;*/
-		height: 30px;
+		height: 10vw;
 		outline: none;
 		appearance:none;
-		line-height: 30px;
+		line-height: 10vw;
 		background-color: white;
 		font-size: 14px;
 		border-radius: 3px;
-		text-indent: 18px;
+		text-indent: 4vw;
 	}
 	.notfind_show_unit_mark{
 		position: relative;

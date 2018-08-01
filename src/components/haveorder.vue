@@ -38,6 +38,10 @@
 				axios.get('http://localhost:1337/user/ufdate/')
 				  .then(function (data) {
 				    if(data.data.err==false){
+				    	//如果没有订单的时候前往的路由
+				    	if(data.data.result.length==0){
+				    		self.$router.push('/major/order/noorder');
+				    	}
 				    	self.items=data.data.result;
 				    	for(let i=0;i<data.data.result.length;i++){
 				    		if(time==data.data.result[i].date){

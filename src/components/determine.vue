@@ -32,18 +32,18 @@
 			},
 			assignment:function(){
 				if(this.message!=""){
-					this.information = message;
+					this.information = this.message;
 				}
 			}
+		},
+		mounted:function(){
+			this.assignment();
 		},
 		computed:{
 			...mapState([
 				'message'
 				])
 		},
-		mounted:function(){
-			this.assignment();
-		}
 	}
 </script>
 <style type="text/css">

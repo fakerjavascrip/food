@@ -85,7 +85,6 @@
 					.then(function (data) {
 						if(data.data.err==false){
 					    	self.items = data.data.result;
-					    	console.log(self.items);
 					    }
 					    else{
 					    	console.log("失败");
@@ -99,7 +98,7 @@
 				var block;
 				this.person = JSON.parse(localStorage.getItem('person'));
 				block = this.person.phone.substr(3, 4);
-				phone = this.phone = this.person.phone.replace(block, "****");
+				this.phone = this.phone = this.person.phone.replace(block, "****");
 			}
 		},
 		mounted:function(){
@@ -114,6 +113,7 @@
 		position: relative;
 		width: 100%;
 		height: auto;
+		overflow: hidden;
 	}
 	.detailed_top{
 		position: fixed;

@@ -56,6 +56,14 @@
 				else{
 					this.show.first = true;
 				} 
+				//修改button的样式，原生js而不是用vue1的修改class
+				var t=document.getElementsByClassName('password_button')[0];
+				if(this.password.old!=""&&this.password.new1!=""&&this.password.new2!=""&&this.show.first==false&&this.show.second==false&&this.show.third==false){
+					t.style.backgroundColor="#3199e8";
+				}
+				else{
+					t.style.backgroundColor="#ccc";
+				}
 			},
 			new1lose:function(){
 				var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
@@ -64,6 +72,13 @@
 				}
 				else{
 					this.show.second = true;
+				}
+				var t=document.getElementsByClassName('password_button')[0];
+				if(this.password.old!=""&&this.password.new1!=""&&this.password.new2!=""&&this.show.first==false&&this.show.second==false&&this.show.third==false){
+					t.style.backgroundColor="#3199e8";
+				}
+				else{
+					t.style.backgroundColor="#ccc";
 				} 
 			},
 			new2lose:function(){
@@ -72,12 +87,50 @@
 				if(this.show.second==false&&this.password.new1!=""&&this.password.new1!=this.password.new2){
 					this.show.third=true;
 				}
-				if(this.password.new2==""||this.password.new1==""||this.show.second==true||this.password.new1==this.password.new2){
+				else{
 						this.show.third = false;
 				}
+				var t=document.getElementsByClassName('password_button')[0];
+				if(this.password.old!=""&&this.password.new1!=""&&this.password.new2!=""&&this.show.first==false&&this.show.second==false&&this.show.third==false){
+					t.style.backgroundColor="#3199e8";
+				}
+				else{
+					t.style.backgroundColor="#ccc";
+				}
+			},
+			clearsession:function(){
+				var self = this;
+				axios.defaults.withCredentials = true;
+				axios.get('http://localhost:1337/user/close/')
+				.then(function(data){
+					console.log(data);
+				})
+				.catch(function(error){
+					console.log(err);
+				})
 			},
 			newpassword:function(){
-				alert("你好");
+				//点击上传和验证密码和修改密码
+				//当三个数据都填入且正确的时候
+				if(this.password.old!=""&&this.password.second!=""&&this.show.first==false&&this.show.second==false&&this.show.third==false){
+					var self = this;
+					var address;
+					axios.defaults.withCredentials = true;
+					axios.get('http://localhost:1337/user/upcipher?password='+this.password.old+'&npassword='+this.password.new1)
+					.then(function (data) {
+						if(data.data.err==false){
+							self.clearsession();
+							self.$router.push('/');
+						}
+						else{
+						    console.log("失败");
+						    console.log(data);
+						}
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
+				}
 			}
 		},
 		mounted:function(){
@@ -179,12 +232,13 @@
 		height: 12vw;
 		margin: auto;
 		color: white;
-		background-color: #3199e8;
+		background-color: #ccc;
 		border-radius: 1vw;
 		margin-top: 4vw;
 		text-align: center;
 		line-height: 12vw;
 		font-size: 19px;
+		font-weight: 800;
 	}
 
 </style>

@@ -1,12 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld.vue'
 import recomd from '@/components/recomd.vue'
 import order from '@/components/order.vue'
 import person from '@/components/person.vue'
 import login from '@/components/login.vue'
 import begain from '@/components/begain.vue'
-import exame from '@/components/exame.vue'
 import major from '@/components/major.vue'
 import lookup from '@/components/lookup.vue'
 import hotfind from '@/components/hotfind.vue'
@@ -88,11 +86,6 @@ export default new Router({
             component:unread
         }
         ]
-    },
-    {
-        path:'/exame',
-        name:'exame',
-        component:exame
     },
     {
         path:'/lookup',

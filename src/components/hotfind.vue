@@ -24,6 +24,7 @@
 		},
 		methods:{
 			fhot:function(){
+				document.getElementsByTagName("body")[0] .style.backgroundColor="white";
 				axios.defaults.withCredentials = true;
 				var self = this;
 				axios.get('http://localhost:1337/user/fhotgood/')
