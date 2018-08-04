@@ -29,13 +29,15 @@
 		    gopay:function(){
 		    	var date = new Date();
 				var  time= date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+				var self =this;
+		    	this.$store.commit('changecache',true);
 		    	axios.defaults.withCredentials = true;
-		    	var self = this;
 		    	if(this.message!=""){
 			    	axios.get('http://localhost:1337/user/umessage?message='+this.message+'&date='+time)
 			    	.then(function(data){
 			    		if(data.data.err==false){
 			    			console.log("留言成功");
+			    			self.$store.commit('changecache',false);
 			    		}
 			    		else{
 			    			console.log("留言上传失败")
@@ -47,6 +49,7 @@
 		    	else if(this.message){
 		    		console.log("留言为空");
 		    	}
+		    	this.$store.commit('changecache',true);
 		    	axios.get('http://localhost:1337/user/customers?goods='+JSON.stringify(this.goods)+"&time="+time)
 		    	.then(function(data){
 		    		if(data.data.err==false){
@@ -56,6 +59,7 @@
 		    			self.$store.commit('cleargoods');
 		    			//清掉订单的信息
 		    			//将显示都清掉
+		    			self.$store.commit('changecache',false);
 		    		}
 		    		else{
 		    			alert("数据失败");

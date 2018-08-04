@@ -14,7 +14,7 @@
 			<button @click = "getvcode" class="register_vcode">获取验证码</button>
 		</div>
 		<input type="button" @click = "register" class="register_submit" value="注册" />
-		<div class="login_about">关于我们</div>
+		<div class="login_about" @click = "inabout">关于我们</div>
 	</div>
 </template>
 <script type="text/javascript">
@@ -30,6 +30,7 @@
 		},
 		methods : {
 			register:function(){
+				var tips;
 				var reg1,reg2,reg3,reg4;
 				//店铺名正则
 				reg1=/[^/]{1,15}$/
@@ -40,24 +41,50 @@
 				//验证码正则
 				reg4=/^\d{4}$/;
 				if(!reg1.test(this.name)){
-					alert("店铺名正则")
+					tips = "请输入合法的店铺名";
+					this.$store.commit('changetips',tips);
 				}
 				else if(!reg2.test(this.phone)){
-					alert("手机号正则");
+					tips = "请输入合法的手机号";
+					this.$store.commit('changetips',tips);
 				}
 				else if(!reg3.test(this.password)){
-					alert("密码正则")
+					tips = "密码格式错误";
+					this.$store.commit('changetips',tips);
 				}
 				else if(!reg4.test(this.vcode)){
-					alert("验证码正则");
+					tips= "验证码错误";
+					this.$store.commit('changetips',tips);
 				}
 				else{
+					this.$store.commit('changecache',true);
 					axios.get('http://localhost:1337/user/register',{
 						params:{
 							name: this.name,
 							phone: this.phone,
 							password: this.password,
 							vcode: this.vcode
+						}
+					}).then(function (response) {
+					    self.$store.commit('changecache',false);
+					    this.$router.push('/');
+					  })
+					  .catch(function (error) {
+					    console.log(error);
+					  });
+				}
+			},
+			getvcode: function(){
+				var reg2=/^[1][3,4,5,7,8][0-9]{9}$/;
+				var tips;
+				if(!reg2.test(this.phone)){
+					tips = "请输入合法的手机号";
+					this.$store.commit('changetips',tips);
+				}
+				else{
+					axios.get('http://localhost:1337/user/vcode',{
+						params:{
+							phone: this.phone,
 						}
 					}).then(function (response) {
 					    console.log(response);
@@ -67,17 +94,8 @@
 					  });
 				}
 			},
-			getvcode: function(){
-				axios.get('http://localhost:1337/user/vcode',{
-					params:{
-						phone: this.phone,
-					}
-				}).then(function (response) {
-				    console.log(response);
-				  })
-				  .catch(function (error) {
-				    console.log(error);
-				  });
+			inabout:function(){
+				this.$router.push('/aboutme');
 			}
 		}
 	}

@@ -73,6 +73,9 @@
 				else{
 					this.show.second = true;
 				}
+				if(this.password.new1!=this.password.new2&&this.password.new2!=""&&this.password.new1!=""&&this.show.second==false){
+					this.show.third = true;
+				}
 				var t=document.getElementsByClassName('password_button')[0];
 				if(this.password.old!=""&&this.password.new1!=""&&this.password.new2!=""&&this.show.first==false&&this.show.second==false&&this.show.third==false){
 					t.style.backgroundColor="#3199e8";
@@ -100,10 +103,11 @@
 			},
 			clearsession:function(){
 				var self = this;
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				axios.get('http://localhost:1337/user/close/')
 				.then(function(data){
-					console.log(data);
+					self.$store.commit('changecache',false);
 				})
 				.catch(function(error){
 					console.log(err);
@@ -115,16 +119,16 @@
 				if(this.password.old!=""&&this.password.second!=""&&this.show.first==false&&this.show.second==false&&this.show.third==false){
 					var self = this;
 					var address;
+					this.$store.commit('changecache',true);
 					axios.defaults.withCredentials = true;
 					axios.get('http://localhost:1337/user/upcipher?password='+this.password.old+'&npassword='+this.password.new1)
 					.then(function (data) {
 						if(data.data.err==false){
 							self.clearsession();
 							self.$router.push('/');
+							self.$store.commit('changecache',false);
 						}
 						else{
-						    console.log("失败");
-						    console.log(data);
 						}
 					})
 					.catch(function (error) {
@@ -136,6 +140,7 @@
 		mounted:function(){
 				var self = this;
 				var address;
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				axios.get('http://localhost:1337/user/ufperson/')
 				.then(function (data) {
@@ -145,6 +150,7 @@
 						if(address.address==null){
 							self.$router.push('/addaddress');
 						}
+						self.$store.commit('changecache',false);
 					}
 					else{
 					    console.log("失败");

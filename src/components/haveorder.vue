@@ -34,6 +34,7 @@
 				var self = this;
 		    	var now = new Date();
 				var  time= now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				axios.get('http://localhost:1337/user/ufdate/')
 				  .then(function (data) {
@@ -51,6 +52,7 @@
 				    			self.$set(self.items[i], 'mark', "订单已送达");
 				    		}
 				    	}
+				    	self.$store.commit('changecache',false);
 				    }
 				    else{
 				    	console.log("失败");

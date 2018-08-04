@@ -56,14 +56,15 @@
 			},
 			backlogin:function(){
 				this.clearsession();
+				this.$store.commit('changecache',false);
 				this.$router.push('/');
 			},
 			clearsession:function(){
 				var self = this;
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				axios.get('http://localhost:1337/user/close/')
 				.then(function(data){
-					console.log(data);
 				})
 				.catch(function(error){
 					console.log(err);

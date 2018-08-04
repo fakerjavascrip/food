@@ -3,7 +3,7 @@
 <!-- 		上框 -->
 		<div class="login">
 			<div id="login_top">
-				<div class="logo">订了么</div>
+				<div class="logo">新鲜蔬</div>
 				<div class="choice">
 					<div v-bind:class="{ login_in:isactive,login_in_child:active }" @click = "loginchange" class="login_in">账号登陆</div>
 					<div v-bind:class="{ login_up:active,login_up_child:isactive }" @click = "registerchange" class="login_up">账号注册</div>
@@ -79,8 +79,9 @@
 		margin: auto;
 	}
 	.logo{
-		width: 140px;
+		width: auto;
 		height: 56px;
+		line-height: 56px;
 		margin: auto;
 		overflow: hidden;
 		color: #2395ff;
@@ -89,7 +90,7 @@
 		line-height: 45px;
 		font-weight: 550;
 		font-family: SimSun;
-		letter-spacing:-7px;
+		letter-spacing:-6px;
 	}
 	.choice{
 		margin: auto;

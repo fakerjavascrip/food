@@ -8,7 +8,7 @@
 		</div>
 		<div class="detailed_center">
 			<div class="detailed_mark_img">
-				<img src="../assets/egg.png">
+				<img v-bind:src="filename">
 			</div>
 			<div class="detailed_mark_state"><b>{{mark}}</b></div>
 			<div class="detailed_mark_again" @click ="backmajor">再去购买</div>
@@ -57,7 +57,9 @@
 				mark:"",
 				person:{},
 				phone:"",
-				date:""
+				date:"",
+				name:"",
+				filename:""
 			}
 		},
 		methods:{
@@ -80,11 +82,15 @@
 				}
 				//查找当前日期全部订单
 				var self = this;
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				axios.get('http://localhost:1337/user/ufgdate?date='+this.date)
 					.then(function (data) {
 						if(data.data.err==false){
 					    	self.items = data.data.result;
+					    	self.name = self.items[0].name;
+					    	self.findimg();
+					    	self.$store.commit('changecache',false);
 					    }
 					    else{
 					    	console.log("失败");
@@ -99,6 +105,24 @@
 				this.person = JSON.parse(localStorage.getItem('person'));
 				block = this.person.phone.substr(3, 4);
 				this.phone = this.phone = this.person.phone.replace(block, "****");
+			},
+			findimg:function(){
+				var self = this;
+				this.$store.commit('changecache',true);
+				axios.defaults.withCredentials = true;
+				axios.get('http://localhost:1337/user/ufimg?name='+this.name)
+					.then(function (data) {
+						if(data.data.err==false){
+							self.filename = data.data.result[0].filename;
+							self.$store.commit('changecache',false);
+					    }
+					    else{
+					    	console.log("失败");
+					    }
+					  })
+					.catch(function (error) {
+						console.log(error);
+					});
 			}
 		},
 		mounted:function(){

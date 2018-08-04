@@ -14,7 +14,7 @@
 						<div class="show_num_mark">购买数量</div>
 						<div class="show_num_change">
 							<button class="show_num_reduce" @click='changenum(item,-1)'><img src="../assets/reduce.png"></button>
-							<input type="text" v-model="item.number"   @blur="leaves(item)"  onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" class="show_num_show">
+							<input type="text" v-model="item.number" @click ="popupshow(item)" readonly="readonly"  class="show_num_show">
 							<button class="show_num_add"  @click='changenum(item,1)'><img src="../assets/add.png"></button>	
 						</div>
 							<select v-model="item.select" class="show_unit">
@@ -50,6 +50,7 @@
 		}, 
 		methods:{
 			citem:function(){
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				var self = this;
 				axios.get('http://localhost:1337/user/fgall/')
@@ -57,10 +58,11 @@
 				    if(data.data.err==false){
 				    	self.items=data.data.result;
 				    	for(let i=0;i<data.data.result.length;i++){
-				    		self.$set(self.items[i], 'number', 0);
+				    		self.$set(self.items[i], 'number', 0.0);
 				    		self.$set(self.items[i], 'select', "斤");
 				    		self.$set(self.items[i], 'display', false);
 				    	}
+				    	self.$store.commit('changecache',false);
 				    }
 				    else{
 				    	console.log("失败");
@@ -83,12 +85,15 @@
 							item.display = false;
 						}
 					}
+					else{
+						item.number=0;
+						item.display = false;
+					}
 				}
 				item.number=item.number.toFixed(1);
 			},
 			addshow(item){
 				item.number=parseFloat(item.number);
-				item.number = item.number.toFixed(1);
 				item.display = false;
 				//js的深拷贝,每次开辟新的空间
 				function deepCopy(p, c) {
@@ -105,7 +110,7 @@
 					}
 				this.confirmgood = deepCopy(item);
 				if(item.number>0){ 
-					this.$store.commit('addshopping',this.confirmgood);
+					this.$store.commit('addshopshow',this.confirmgood);
 				}
 				item.number=0;
 			},
@@ -114,7 +119,7 @@
 					item.number =0;
 				}
 				item.number = parseFloat(item.number);
-				item.number = item.number.toFixed(2);
+				item.number = item.number.toFixed(1);
 				if(item.number==0){
 					item.display = false;
 				}
@@ -124,13 +129,16 @@
 			},
 			vaddress:function(){
 				var self = this;
+				var xixi = window;
 				var address;
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				axios.get('http://localhost:1337/user/ufperson/')
 				.then(function (data) {
 					if(data.data.err==false){
 						address = data.data.result[0];
-						window.localStorage.setItem('person',JSON.stringify(address));
+						xixi.localStorage.setItem('person',JSON.stringify(address));
+						self.$store.commit('c1angecache',false);
 						if(address.address==null){
 							self.$router.push('/addaddress');
 						}
@@ -142,6 +150,10 @@
 				.catch(function (error) {
 					console.log(error);
 				});
+			},
+			popupshow:function(item){
+				this.$store.commit('obtain',false);
+				this.$store.commit('openpopup',item);
 			}
 		},
 		mounted :function(){
@@ -157,7 +169,7 @@
 </script>
 <style type="text/css">
 	.show_submit{
-		position: relative;
+		position: relative;                                                          
 		width: 20vw;
 		height: 8vw;
 		text-align: center;

@@ -14,7 +14,7 @@
 				</div>
 			</div>
 			<div class="initial_contacts">
-				<div class="initial_name"><b>电话</b></div>
+				<div class="initial_name"><b>手机</b></div>
 				<div class="initial_name_input">
 					<input type="text" readonly="readonly" v-model="phone" name="">
 				</div>
@@ -54,18 +54,27 @@
 			},
 			addaddress:function(){
 				if(this.show==true){
+					tip="请输入正确的地址格式"
+					reg=/[^/]{10,100}$/
+					if(!reg1.test(this.name)){
+						this.$store.commit('changetips',tips);
+					}
+					else{
 					var self = this;
-					axios.defaults.withCredentials = true;
-					axios.get('http://localhost:1337/user/uuaddress?address='+self.person.address)
-						.then(function (data) {
-							console.log(data);
-							if(data.data.err==false){
-								self.person.address=self.address;
-						    }
-						  })
-						.catch(function (error) {
-							console.log(error);
-						});
+						axios.defaults.withCredentials = true;
+						this.$store.commit('changecache',true);
+						axios.get('http://localhost:1337/user/uuaddress?address='+self.person.address)
+							.then(function (data) {
+								console.log(data);
+								if(data.data.err==false){
+									self.person.address=self.address;
+							    }
+							    self.$store.commit('changecache',false);
+							  })
+							.catch(function (error) {
+								console.log(error);
+							});
+					}
 				}
 				else{
 					this.$router.push('/major/person');

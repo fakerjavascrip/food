@@ -34,5 +34,8 @@
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.1"
+  },
+  "dependencies": {
+    "@alicloud/sms-sdk": "^1.1.2"
   }
 }

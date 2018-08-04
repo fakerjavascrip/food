@@ -7,12 +7,12 @@
 				<input type="password" v-model="password" name="" placeholder="密码">
 			</div>
 			<div class="login_prompt">
-				<p>温馨提示：使用订了么注册后的手机号登录,并且代表您已同意<a href="#">《用户服务协议》</a></p>
+				<p>温馨提示：使用新鲜蔬注册后的手机号登录,并且代表您已同意服务</p>
 			</div>
 			<div class="login_submit"> 
 				<button @click ='login'>登录</button>
 			</div>
-			<div class="login_about">找回密码</div>
+			<div class="login_about" @click ="retrieve">找回密码</div>
 		</div>
 </template> 
 <script type="text/javascript">
@@ -27,36 +27,44 @@
 		},
 		methods : {
 			login:function(){
+				var tips;
 				//验证手机号的正则
 				var reg1=/^[1][3,4,5,7,8][0-9]{9}$/;
 				//验证密码的正则
 				var reg2 = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
 				if(!reg1.test(this.phone)){
-					//弹手机号不对的弹窗
-					this.$store.commit('changetips');
-					console.log(this.tipsshow);
+					tips = "请填写合法手机号"
+					this.$store.commit('changetips',tips);
 				}
 				else if(!reg2.test(this.password)){
-					//弹密码不对的弹窗
-					alert("密码的格式不对")
+					tips = "密码错误"
+					this.$store.commit('changetips',tips);
 				}
 				else{
 					var self = this;
+					this.$store.commit('changecache',true);
 					axios.defaults.withCredentials = true;
 					axios.get('http://localhost:1337/user/login?phone='+this.phone+'&password='+this.password)
 					  .then(function (data) {
 					  	console.log(data);
 					    if(data.data.err==false){
 						    self.$router.push('/major');
+						    self.$store.commit('changecache',false);
 					    }
 					    else{
-					    	console.log("失败");
+					    	self.$store.commit('changecache',false);
+							tips = "密码错误"
+							self.$store.commit('changetips',tips);
 					    }
 					  })
 					  .catch(function (error) {
-					    console.log(error);
+					  	self.$store.commit('changecache',false);
+							tips = "服务器后台出现问题"
+							self.$store.commit('changetips',tips);
 					  });
 				}
+			},retrieve:function(){
+				this.$router.push('./retrieve');
 			}
 		},
 		computed:{

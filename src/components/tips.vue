@@ -1,7 +1,7 @@
 <template>
 	<div  class="tips_box">
-		<transition name="fade">
-			<div class="tips_show">验证码错误</div>
+		<transition  name="fade">
+			<div v-if="tipsshow" class="tips_show">{{tips}}</div>
 		</transition>
 	</div>
 </template>
@@ -10,7 +10,6 @@
 	export default{
 		data(){
 			return{
-				show:false,
 			}
 		},
 		methods:{
@@ -18,21 +17,19 @@
 		},
 		computed:{
             ...mapState([
-            	'tipsshow'
+            	'tipsshow',
+            	'tips'
             ]),
 		},
 	}
 </script>
 <style type="text/css">
-        .fade-leave-active {
-           transition: all  1.5s;
-        }
-        .fade-leave{
-        	opacity: 1;
-        }
-        .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-          opacity: 0;
-        }
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 	.tips_box{
 		position: fixed;
 		width: 100%;
@@ -44,7 +41,7 @@
 	}
 	.tips_show{
 		position: relative;
-		width: 32vw;
+		width: 36vw;
 		height: 100%;
 		margin: auto;
 		border-radius: 5vw;

@@ -14,7 +14,7 @@
 						<div class="confirm_unit"><span>{{item.select}}</span></div>
 						<div class="confirm_num">
 							<button class="confirm_num_reduce" @click='changenum(item,-1)'><img src="../assets/reduce.png"></button>
-							<input type="text" v-model="item.number" @blur="leaves(item)" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" class="confirm_num_show">
+							<input type="text" v-model="item.number"  @click ="popupshow(item)" class="confirm_num_show">
 							<button class="confirm_num_add"  @click='changenum(item,1)'><img src="../assets/add.png"></button>
 						</div>
 					</div>
@@ -33,24 +33,23 @@
 			}
 		},
 		methods:{
-			// addgood:function(){
-			// 	this.items=this.$store.getters.vegetables;
-			// 	console.log(this.items);
-			// },
 			changenum:function(item,mark){
 				item.number=parseFloat(item.number);
 				if(mark==1){
 					item.number=item.number+1;
+					this.$store.commit('addshopping',item);
 				}
-				else if(mark==-1&&item.number>=1){
+				else if(mark==-1&&item.number>0){
 					item.number=item.number-1;
-					if(item.number==0){
-						this.$store.commit('reduceshopping',item);
+					if(item.numbe<0){
+						item.number=0;
 					}
+					this.$store.commit('reduceshopping',item);
 				}
+				item.number=item.number.toFixed(1);
 			},
 			cleargoods:function(){
-				this.$store.commit('clear');
+				this.$store.commit('cleargoods');
 			},
 			hidden:function(){
 				this.$store.commit('changeconfirm');
@@ -60,9 +59,14 @@
 					item.number =0;
 				}
 				item.number = parseFloat(item.number);
+				item.number = item.number.toFixed(1);
 				if(item.number==0){
 					this.$store.commit('reduceshopping',item);
 				}
+			},
+			popupshow:function(item){
+				this.$store.commit('obtain',true);
+				this.$store.commit('openpopup',item);
 			}
 		},
 		computed: {
@@ -79,7 +83,7 @@
 		width: 100%;
 		height: 100vh;
 		background-color: gray;
-		opacity: 0.4;
+		opacity: 0.3;
 		bottom: 0px;
 	}
 	.confirm_box{

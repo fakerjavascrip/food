@@ -21,6 +21,9 @@ import password from '@/components/password.vue'
 import address from '@/components/address.vue' 
 import addaddress from '@/components/addaddress.vue'
 import unread from '@/components/unread.vue'
+import aboutme from '@/components/aboutme.vue'
+import retrieve from '@/components/retrieve.vue'
+import cache from '@/components/cache.vue'
 
 Vue.use(Router)
 
@@ -31,6 +34,21 @@ export default new Router({
         path:'/',
         name:"begain",
         component:begain
+    },
+    {
+        path:'/aboutme',
+        name:'aboutme',
+        component:aboutme,
+    },
+    {
+        path:'/cache',
+        name:'cache',
+        component:cache
+    },
+    {
+        path:'/retrieve',
+        name:'retrieve',
+        component:retrieve
     },
     {
         path:'/addaddress',

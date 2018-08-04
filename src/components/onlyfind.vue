@@ -11,7 +11,7 @@
 						<div class="only_show_num_mark">购买数量</div>
 						<div class="only_show_num_change">
 							<button class="only_show_num_reduce" @click = "ochangenum(item,-1)"><img src="../assets/reduce.png"></button>
-							<input class="only_show_num_show" @blur="leaves(item)" v-model="item.number" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" type="text" name="">
+							<input class="only_show_num_show"v-model="item.number" @click ="popupshow(item)" type="text" name="">
 							<button class="only_show_num_add" @click ="ochangenum(item,1)"><img src="../assets/add.png"></button>	
 						</div>
 							<select v-model="item.select" class="only_show_unit">
@@ -52,27 +52,31 @@
 		},
 		methods:{
 			onlyfind:function(){
-				axios.defaults.withCredentials = true;
-				var self = this;
-				axios.get('http://localhost:1337/user//ahotgood?name='+this.goodname)
-				  .then(function (data) {
-				  	console.log("添加成功");
-				  })
-				  .catch(function (error){
-				    console.log(error);
-				  });
-				axios.get('http://localhost:1337/user/fgname?name='+this.goodname)
-				  .then(function (data) {
-				  	self.items = data.data.result;
-				  	for(let i=0;i<self.items.length;i++){
-				  		self.$set(self.items[i], 'number',0);
-				  		self.$set(self.items[i],'select',"斤");
-				  		self.$set(self.items[i],'display',false);
-				  	}
-				  })
-				  .catch(function (error){
-				    console.log(error);
-				  });
+				if(this.goodname!=""){
+					this.$store.commit('changecache',true);
+					axios.defaults.withCredentials = true;
+					var self = this;
+					axios.get('http://localhost:1337/user//ahotgood?name='+this.goodname)
+					  .then(function (data) {
+					  })
+					  .catch(function (error){
+					    console.log(error);
+					  });
+					  console.log(this.goodname);
+					axios.get('http://localhost:1337/user/fgname?name='+this.goodname)
+					  .then(function (data) {
+					  	self.items = data.data.result;
+					  	for(let i=0;i<self.items.length;i++){
+					  		self.$set(self.items[i], 'number',0);
+					  		self.$set(self.items[i],'select',"斤");
+					  		self.$set(self.items[i],'display',false);
+					  	}
+					  	self.$store.commit('changecache',false);
+					  })
+					  .catch(function (error){
+					    console.log(error);
+					  });
+				}
 			},
 			onlyshow:function(item){
 				item.number=parseFloat(item.number);
@@ -92,7 +96,7 @@
 				　　}
 				this.confirmgood = deepCopy(item);
 				if(item.number>0){ 
-					this.$store.commit('addshopping',this.confirmgood);
+					this.$store.commit('addshopshow',this.confirmgood);
 				}
 				item.number=0;
 			},
@@ -109,8 +113,12 @@
 							item.display = false;
 						}
 					}
+					else{
+						item.number=0;
+						item.display = false;
+					}
 				}
-				item.number = item.number.toFixed(1);
+				item.number=item.number.toFixed(1);
 			},
 			leaves:function(item){
 				if(item.number==""){
@@ -123,6 +131,10 @@
 				else if(item.number>0){
 					item.display=true;
 				}
+			},
+			popupshow:function(item){
+				this.$store.commit('obtain',false);
+				this.$store.commit('openpopup',item);
 			}	
 		},
 		computed:{

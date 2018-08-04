@@ -40,6 +40,7 @@
 				this.$router.push('/major');  
 			},
 			onlyfind:function(){
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				var self = this;
 				axios.get('http://localhost:1337/user/fgname?name='+this.goodname)
@@ -50,6 +51,7 @@
 				    else{
 				    	self.$router.push('/lookup/notfind');
 				    }
+				    self.$store.commit('changecache',false);
 				  })
 				  .catch(function (error){
 				    console.log(error);
@@ -72,6 +74,7 @@
 		    	this.$store.commit('increment');
 		    },
 			item:function(){
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				var self = this;
 				axios.get('http://localhost:1337/user/fgall/')
@@ -81,6 +84,7 @@
 				    	for(let i=0;i<data.data.result.length;i++){
 				    		self.$set(self.items[i], 'number', 1);
 				    	}
+				    	self.$store.commit('changecache',false);
 				    }
 				    else{
 				    	console.log("失败");

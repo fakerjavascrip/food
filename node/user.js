@@ -42,6 +42,8 @@ var User_update_address = require('./user/user_update_address');
 var Upcipher = require('./user/user_password_cipher.js');
 //用户更换绑定手机号
 // var User_bind_phone = require('./user/user_bind_phone.js');
+//用户查找订单第一张图
+var User_find_img = require('./user/user_find_img.js');
 var A_change_goods = require('./administrator/a_change_goods.js');
 var A_unit_goods = require('./administrator/a_unit_goods.js');
 var A_delete_goods = require('./administrator/a_delete_goods.js');
@@ -655,6 +657,7 @@ router.use('/addgoods', upload.single('file'),Session,administrator,function(req
     else if(req.query.name){
   		name = req.query.name;
   	}
+  	console.log(name);
 	if(isGoods(name)){
 		Add_goods(filename,file,name,function(result){
 	  	returnJson(req,res,result);	
@@ -1223,4 +1226,27 @@ router.use('/umessage',Session,function(req,res){
 	}
 })
 //查看订单备注
+//用户查看订单第一个的图片信息 user find img
+router.use('/ufimg',Session,function(req,res){
+	var name;
+	if(req.body.name){
+		name = req.body.name;
+	}
+	else if(req.query.name){
+		name = req.query.name;
+	}
+	if(isGoods(name)){
+		console.log(name);
+		User_find_img(name,function(result){
+			returnJson(req,res,result);
+		})
+	}
+	else{
+		result = {
+			err:true,
+			result:"正则不匹配"
+		}
+		returnJson(req,res,result);
+	}
+});
 module.exports = router;

@@ -24,7 +24,7 @@
 							<div class="notfind_show_num_mark">购买数量</div>
 							<div class="notfind_show_num_change">
 								<button class="notfind_show_num_reduce" @click='changenum(item,-1)'><img src="../assets/reduce.png"></button>
-								<input type="text" v-model="item.number"  @blur="leaves(item)" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')" class="notfind_show_num_show">
+								<input type="text" v-model="item.number" @click = "popupshow(item)" class="notfind_show_num_show">
 								<button class="notfind_show_num_add"  @click='changenum(item,1)'><img src="../assets/add.png"></button>	
 							</div>
 								<select class="notfind_show_unit">
@@ -67,6 +67,7 @@
 		},
 		methods:{
 			item:function(){
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				var self = this;
 				axios.get('http://localhost:1337/user/fgall/')
@@ -78,10 +79,9 @@
 				    		self.$set(self.items[i], 'select', "斤");
 				    		self.$set(self.items[i],'display',false);
 				    	}
+				    	self.$store.commit('changecache',false);
 				    }
 				    else{
-				    	
-				    	console.log("失败");
 				    }
 				  })
 				  .catch(function (error){
@@ -101,8 +101,12 @@
 							item.display = false;
 						}
 					}
+					else{
+						item.number=0;
+						item.display = false;
+					}
 				}
-				item.number = item.number.toFixed(1);
+				item.number=item.number.toFixed(1);
 			},
 			notshow:function(item){
 				item.number=parseFloat(item.number);
@@ -122,7 +126,7 @@
 				　　}
 				this.confirmgood = deepCopy(item);
 				if(item.number>0){ 
-					this.$store.commit('addshopping',this.confirmgood);
+					this.$store.commit('addshopshow',this.confirmgood);
 				}
 				item.number=0;
 			},
@@ -137,6 +141,10 @@
 				else if(item.number>0){
 					item.display=true;
 				}
+			},
+			popupshow:function(item){
+				this.$store.commit('obtain',false);
+				this.$store.commit('openpopup',item);
 			}	
 		},
 		computed:{

@@ -21,16 +21,19 @@ export default new Vuex.Store({
 	    //订单详细内容
 	    date:"",
 	    message:"",
-	    tipsshow:true,
-	    goods: [
-      		{ name: "大白菜", num: 0, unit: "斤" },
-    		],
+	    tipsshow:false,
+	    tips:"",
+	    popup:false,
+	    popnum:0,
+	    second:0,
+	    goods: [],
     	//购物车
     	shopping:[],
+    	cacheshow:false,
 		},
 		getters: {
 			doneTodos: state => {
-		    	return state.goods[0];
+		    	return state.goods;
 		    },
 			vegetables: state => {
 		    	return state.shopping;
@@ -65,10 +68,22 @@ export default new Vuex.Store({
 				//不用存localstorage
 			    state.goodname = goodname
 			},
+			//添加购物车中商品
 			addshopping(state,item){
 				var canrun = true;
 				item.number = parseFloat(item.number);
-				console.log(state.shopping);
+				for(let i=0;i<state.amount;i++){
+					if(state.shopping[i].name==item.name&&item.select==state.shopping[i].select){
+						state.shopping[i].number = item.number;
+						canrun=false;
+					}
+				}
+				window.localStorage.setItem('shop',JSON.stringify(state.shopping));
+			},
+			//从商品展示中加入购物车
+			addshopshow(state,item){
+				var canrun = true;
+				item.number = parseFloat(item.number);
 				for(let i=0;i<state.amount;i++){
 					if(state.shopping[i].name==item.name&&item.select==state.shopping[i].select){
 						state.shopping[i].number = item.number+state.shopping[i].number;
@@ -88,18 +103,26 @@ export default new Vuex.Store({
 			reduceshopping(state,item){
 				for(let i=0;i<state.amount;i++){
 					if(state.shopping[i].name==item.name&&state.shopping[i].select==item.select){
-						state.shopping.splice(i,1);
-						state.amount = state.amount-1;
-						window.localStorage.setItem('shop',JSON.stringify(state.shopping));
-						window.localStorage.setItem('amount',JSON.stringify(state.amount));
-						if(state.amount==0){
-							state.plus = false;
-							state.confirmshow = false;
-							window.localStorage.setItem('plus',JSON.stringify(state.plus));
-							window.localStorage.setItem('confirmm',JSON.stringify(state.confirmshow));
+						if(item.number==0){
+							state.shopping.splice(i,1);
+							state.amount = state.amount-1;
+							window.localStorage.setItem('shop',JSON.stringify(state.shopping));
+							window.localStorage.setItem('amount',JSON.stringify(state.amount));
+							if(state.amount==0){
+								state.plus = false;
+								state.confirmshow = false;
+								window.localStorage.setItem('plus',JSON.stringify(state.plus));
+								window.localStorage.setItem('confirmm',JSON.stringify(state.confirmshow));
+							}
+						}
+						else{
+							state.shopping[i].number = item.number;
 						}
 					}
 				}
+				window.localStorage.setItem('plus',JSON.stringify(state.plus));
+				window.localStorage.setItem('shop',JSON.stringify(state.shopping));
+				window.localStorage.setItem('amount',JSON.stringify(state.amount));
 			},
 			cleargoods(state){
 				state.shopping.splice(0,state.amount);
@@ -107,7 +130,7 @@ export default new Vuex.Store({
 				state.plus = false;
 				state.confirmshow = false;
 				state.message = "";
-				localStorage.clear()
+				localStorage.clear();
 			},
 			updateshop(state,shop){
 				for (var i in shop) {
@@ -138,8 +161,29 @@ export default new Vuex.Store({
 				state.confirmshow = false;
 				state.message = "";
 			},
-			changetips(state){
-				state.tipsshow = false;
+			changetips(state,title){
+				state.tips = title;
+				state.tipsshow = true;
+				setTimeout(function(){
+					state.tipsshow = false;
+				},1500);
+			},
+			openpopup(state,item){
+				console.log(item);
+				state.goods= item;
+				state.popup = true;
+			},
+			closepopup(state){
+				state.popup = false;
+			},
+			cpopnum(state,num){
+				state.popnum = num;
+			},
+			obtain(state,bolean){
+				state.second = bolean;
+			},
+			changecache(state,bolean){
+				state.cacheshow = bolean;
 			}
 		},
 		//异步的调用mutations

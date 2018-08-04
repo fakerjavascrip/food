@@ -2,9 +2,10 @@
   <div id="app">
 <!--     在这个里可以放一些公共的组件 -->
     <confirm v-show="confirmshow"></confirm>
+    <cache></cache>
     <pay></pay>
-      <tips></tips>
-<!--     <popup></popup> -->
+    <tips></tips>
+    <popup></popup>
     <router-view/>
   </div>
 </template>
@@ -18,6 +19,7 @@
     import gopay from './components/gopay.vue';
     import popup from './components/popup.vue';
     import tips from './components/tips.vue';
+    import cache from './components/cache.vue';
     import { mapState} from 'vuex'
     import { mapGetters} from 'vuex'
     import { mapMutations } from 'vuex'
@@ -32,7 +34,7 @@
         	plus:false,
         }
         }, 
-    components:{ confirm, pay ,gopay,tips,popup},
+    components:{ confirm, pay ,gopay,tips,popup,cache},
     computed:{
         ...mapState([
         'confirmshow',
@@ -90,7 +92,7 @@
     }
     #app {
       position: relative;
-    /*  font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
+      font-family: 'Avenir', Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }

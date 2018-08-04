@@ -63,8 +63,25 @@ var code = function(phone,callback){
                                         console.log(vcode);
                                     }
                                     if(result.err==false){
-                                        console.log("发送短信");
-                                        //后端传验证码给手机
+                                    	//发送短信验证码
+										const SMSClient = require('@alicloud/sms-sdk')
+										const accessKeyId = 'LTAILxAXARievXDH'
+										const secretAccessKey = 'rJNOKuLLzGpMr7S0QrN7eYqZNuIquh'
+										let smsClient = new SMSClient({accessKeyId, secretAccessKey})
+										smsClient.sendSMS({
+										    PhoneNumbers: phone,
+										    SignName: '梁博',
+										    TemplateCode: 'SMS_141206033',
+										    TemplateParam:'{"code":"'+vcode+'"}'
+										}).then(function (res) {
+										    let {Code}=res
+										    if (Code === 'OK') {
+										    }
+										}, function (err) {
+										})
+											result={
+												result:"你好"
+											}
                                     }
                                     callback(result);
                                 	})

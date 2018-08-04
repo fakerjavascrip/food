@@ -17,14 +17,13 @@
 				vegetables:[]
 			}
 		},
-		computed:{
-            ...mapState([
+		computed:mapState([
             	'goodname'
             ]),
-		},
 		methods:{
 			fhot:function(){
 				document.getElementsByTagName("body")[0] .style.backgroundColor="white";
+				this.$store.commit('changecache',true);
 				axios.defaults.withCredentials = true;
 				var self = this;
 				axios.get('http://localhost:1337/user/fhotgood/')
@@ -34,6 +33,7 @@
 				    	for(let i=0;i<data.data.result.length;i++){
 				    		self.$set(self.items[i], 'number', 1);
 				    	}
+				    	self.$store.commit('changecache',false);
 				    }
 				    else{
 				    	console.log("失败");
